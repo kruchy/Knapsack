@@ -1,17 +1,41 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Scanner;
 
-
-/**
- * Class for solving the 0-1 Knapsack problem.
- */
 public class Knapsack {
 
+	
+	/**
+	 * Hard written function to calculate optimal set
+	 * @param args arguments given to main function (wut)
+	 *
+	 */
 	public static void main(String[] args) {
-		
-		int[] weights = {2, 3, 4, 3, 2, 3, 5, 3};
-		int[] values =  {2, 3, 4, 5, 5, 6, 3, 2};
+	//TODO GUI magic and stuff 
+		int[] weights2 = {2, 3, 4, 3, 2, 3, 5, 3};
+		int[] values2 =  {2, 3, 4, 5, 5, 6, 3, 2};
 		int capacity = 5;
+		Scanner in = new Scanner(System.in);
+		int  amount = 0;
 		
+		System.out.println("Enter amount of objects");
+		amount = in.nextInt();
+		int[] weights = new int[amount];
+		int[] values = new int[amount];
+		int  wei,val;
+		for(int i = 0 ; i < amount;  i++)
+		{
+			System.out.println("Enter weight and value");
+			wei = in.nextInt();
+			val = in.nextInt();
+			weights[i] = wei;
+			values[i] = val;
+		}
+		
+		
+		// do not touch, magic
 		int[][] solution = getSolutionMatrix(values, weights, capacity);
 		int[] optimalSubset = getOptimalSubset(solution, weights);
 		
@@ -49,9 +73,8 @@ public class Knapsack {
 	 * Returns the optimal subset of items that should be included in the knapsack
 	 * given a completed solution matrix.
 	 * 
-	 * @param solutionMatrix An N by W matrix, where N is the number of items and W
-	 *  	  is the capacity of the knapsack.
-	 * @param weights An array of size N containing the weights of each of the items.
+	 * @param solutionMatrix Number x Capacity matrix
+	 * @param weights N sized array of the weights of each of the items.
 	 * 
 	 */
 	private static int[] getOptimalSubset(int[][] solutionMatrix, int[] weights) {
@@ -59,8 +82,7 @@ public class Knapsack {
 		int numItems = 0;
 		int i = solutionMatrix.length - 1;
 			for (int j = solutionMatrix[0].length - 1; j >= 0 && i > 0;i--) {
-				// If the item is in the optimal subset, add it and subtract its weight
-				// from the column we are checking.
+				
 				if (solutionMatrix[i][j] != solutionMatrix[i-1][j]) {
 					subset[numItems] = i;
 					j -= weights[i-1];
@@ -71,7 +93,9 @@ public class Knapsack {
 	}
 	
 	/**
-	 * Prints an array to the console, applying the given title.
+	 * Prints an array to the console.
+	 * @param array array to be printed
+	 * @param title title to the print, it's that simple.
 	 */
 	private static void printArray(int[] array, String title) {
 		StringBuilder builder = new StringBuilder();
@@ -91,7 +115,9 @@ public class Knapsack {
 	}
 
 	/**
-	 * Prints a matrix (2-dimensional array) to the console, applying the given title.
+	 * Prints 2-dimensional matrix  to the console.
+	 * @param matrix matrix to be printed.
+	 * @param title title of the print, it's that simple.
 	 */
 	private static void printMatrix(int[][] matrix, String title) {
 		StringBuilder builder = new StringBuilder();
