@@ -7,10 +7,10 @@ public class Individual {
 	 */
     static int defaultGeneLength = 64;
     private byte[] genes;
-    static int[] values;
-    static int[] weights;
+    public static int[] values;
+    public static int[] weights;
     // Cache
-    private int fitness = 0;
+    private float fitness = 0;
     public int id; 
     public Individual()
     {
@@ -63,7 +63,7 @@ public class Individual {
         return genes.length;
     }
 
-    public int getFitness(int id, int maxWeight) {
+    public float getFitness(int id, int maxWeight) {
         if (fitness == 0) {
             fitness = FitnessCalc.getFitness(this,id,maxWeight);
         }
