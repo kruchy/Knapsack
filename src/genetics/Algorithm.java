@@ -8,7 +8,7 @@ public class Algorithm {
     private static final double mutationRate = 0.015;
     private static final int tournamentSize = 5;
     private static final boolean elitism = true;
-
+   
     /* Public methods */
     
     /**
@@ -16,12 +16,12 @@ public class Algorithm {
      * @param pop population
      * @return  new population
      */
-    public static Population evolvePopulation(Population pop) {
+    public static Population evolvePopulation(Population pop,int maxWeight) {
         Population newPopulation = new Population(pop.size(), false);
 
         // Best individual
         if (elitism) {
-            newPopulation.saveIndividual(0, pop.getFittest());
+            newPopulation.saveIndividual(0, pop.getFittest(maxWeight));
         }
 
         // Crossover population
@@ -34,8 +34,8 @@ public class Algorithm {
         // Loop over the population size and create new individuals with
         // crossover
         for (int i = elitismOffset; i < pop.size(); i++) {
-            Individual indiv1 = tournamentSelection(pop);
-            Individual indiv2 = tournamentSelection(pop);
+            Individual indiv1 = tournamentSelection(pop,maxWeight);
+            Individual indiv2 = tournamentSelection(pop,maxWeight);
             Individual newIndiv = crossover(indiv1, indiv2);
             newPopulation.saveIndividual(i, newIndiv);
         }
@@ -76,7 +76,7 @@ public class Algorithm {
     }
 
     // Select individuals for crossover
-    private static Individual tournamentSelection(Population pop) {
+    private static Individual tournamentSelection(Population pop,int maxWeight) {
         // Create a tournament population
         Population tournament = new Population(tournamentSize, false);
         // For each place in the tournament get a random individual
@@ -85,7 +85,7 @@ public class Algorithm {
             tournament.saveIndividual(i, pop.getIndividual(randomId));
         }
         // Get the fittest
-        Individual fittest = tournament.getFittest();
+        Individual fittest = tournament.getFittest(maxWeight);
         return fittest;
     }
 }
