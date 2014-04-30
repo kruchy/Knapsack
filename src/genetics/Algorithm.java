@@ -3,7 +3,7 @@ package genetics;
 
 public class Algorithm {
 
-    /* GA parameters */
+    
     private static final double uniformRate = 0.5;
     private static final double mutationRate = 0.015;
     private static final int tournamentSize = 5;
@@ -11,11 +11,15 @@ public class Algorithm {
 
     /* Public methods */
     
-    // Evolve a population
+    /**
+     * Evolve the population with tournament selection.
+     * @param pop population
+     * @return  new population
+     */
     public static Population evolvePopulation(Population pop) {
         Population newPopulation = new Population(pop.size(), false);
 
-        // Keep our best individual
+        // Best individual
         if (elitism) {
             newPopulation.saveIndividual(0, pop.getFittest());
         }
