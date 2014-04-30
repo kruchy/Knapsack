@@ -1,6 +1,10 @@
 package genetics;
 public class Individual {
 	
+	
+	/*
+	 * Stwierdzilem ze static tutaj by siad³
+	 */
     static int defaultGeneLength = 64;
     private byte[] genes;
     static int[] values;

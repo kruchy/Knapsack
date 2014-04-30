@@ -1,6 +1,11 @@
 package genetics;
 
-
+/**
+ * Wszêdzie wciska³em maxWeight ¿eby to jakoœ ograniczyc
+ * 
+ * @author Kruchy
+ *
+ */
 public class Algorithm {
 
     

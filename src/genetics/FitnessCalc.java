@@ -1,4 +1,6 @@
 package genetics;
+
+
 public class FitnessCalc {
 
     static byte[] solution = new byte[64];
@@ -25,8 +27,12 @@ public class FitnessCalc {
         }
     }
 
-    /*
-     * TODO fitness
+    /**
+     * doda³em maxWeigth, do roboty funkcja oceny
+     * @param individual
+     * @param id
+     * @param maxWeight
+     * @return
      */
     // Calculate inidividuals fittness by comparing it to our candidate solution
     static int getFitness(Individual individual,int id,int maxWeight) {
