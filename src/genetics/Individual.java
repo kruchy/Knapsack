@@ -63,9 +63,9 @@ public class Individual {
         return genes.length;
     }
 
-    public float getFitness(int id, int maxWeight) {
+    public float getFitness(int id) {
         if (fitness == 0) {
-            fitness = FitnessCalc.getFitness(this,id,maxWeight);
+            fitness = FitnessCalc.getFitness(this,id);
         }
         return fitness;
     }

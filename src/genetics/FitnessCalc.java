@@ -35,7 +35,7 @@ public class FitnessCalc {
      * @return
      */
     // Calculate inidividuals fittness by comparing it to our candidate solution
-    static float getFitness(Individual individual,int id,int maxWeight) {
+    static float getFitness(Individual individual,int id) {
         int fitness = 0,value = 0,weight = 0;
         // Loop through our individuals genes and compare them to our cadidates
         for (int i = 0; i < individual.size(); i++) {
@@ -46,7 +46,7 @@ public class FitnessCalc {
         
         	}
         }
-        if(weight > maxWeight) return 0 ;
+        if(weight > Population.getMaxWeight()) return 0 ;
         return value;
     }
     

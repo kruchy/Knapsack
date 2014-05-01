@@ -9,7 +9,8 @@ public class GA {
 
         // Set a candidate solution
         FitnessCalc.setSolution("1111000000000000000000000000000000000000001111000000000000001111");
-        int maxWeight = 5;
+        Population.setMaxWeight(5);
+        int maxWeight = Population.getMaxWeight();
         int[] vals = {1,2,3};
         int[] weis = {2,3,4};
         Individual.setDefaultGeneLength(3);
@@ -25,10 +26,10 @@ public class GA {
         do{
         	fittest = myPop.getFittest(maxWeight);
         	generationCount++;
-            System.out.println("Generation: " + generationCount + " Fittest: " + fittest.getFitness(fittest.id,maxWeight));
+            System.out.println("Generation: " + generationCount + " Fittest: " + fittest.getFitness(fittest.id));
             myPop = Algorithm.evolvePopulation(myPop,maxWeight);
         }
-    	while (fittest.getFitness(fittest.id,maxWeight) < FitnessCalc.getMaxFitness() & generationCount <= 1000);
+    	while (fittest.getFitness(fittest.id) < FitnessCalc.getMaxFitness() & generationCount <= 1000);
         System.out.println("Solution found!");
         System.out.println("Generation: " + generationCount);
         System.out.println("Genes:");

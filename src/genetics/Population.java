@@ -2,7 +2,7 @@ package genetics;
 public class Population {
 	
 	Individual[] individuals;
-
+	private static int maxWeight;
     /*
      * Constructors
      */
@@ -34,7 +34,7 @@ public class Population {
         // Loop through individuals to find fittest
         for (int i = 0; i < size(); i++) {
         	Individual tmp = getIndividual(i) ;
-            if (fittest.getFitness(fittest.id,maxWeight) <= tmp.getFitness(tmp.id,maxWeight)) {
+            if (fittest.getFitness(fittest.id) <= tmp.getFitness(tmp.id)) {
                 fittest = getIndividual(i);
             }
         }
@@ -51,4 +51,16 @@ public class Population {
     public void saveIndividual(int index, Individual indiv) {
         individuals[index] = indiv;
     }
+
+
+
+	public static int getMaxWeight() {
+		return maxWeight;
+	}
+
+
+
+	public static void setMaxWeight(int maxWeight) {
+		Population.maxWeight = maxWeight;
+	}
 }
