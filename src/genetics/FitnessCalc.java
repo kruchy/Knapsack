@@ -4,7 +4,16 @@ package genetics;
 public class FitnessCalc {
 
     static byte[] solution = new byte[64];
-
+    private static int maxWeight;
+	public static int getMaxWeight() {
+		return maxWeight;
+	}
+	
+	
+	
+	public static void setMaxWeight(int maxWeight) {
+		FitnessCalc.maxWeight = maxWeight;
+	}
     /* Public methods */
     // Set a candidate solution as a byte array
     public static void setSolution(byte[] newSolution) {
@@ -46,7 +55,7 @@ public class FitnessCalc {
         
         	}
         }
-        if(weight > Population.getMaxWeight()) return 0 ;
+        if(weight > FitnessCalc.getMaxWeight()) return 0 ;
         return value;
     }
     

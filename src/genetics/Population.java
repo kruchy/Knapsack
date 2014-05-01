@@ -2,7 +2,7 @@ package genetics;
 public class Population {
 	
 	Individual[] individuals;
-	private static int maxWeight;
+	
     /*
      * Constructors
      */
@@ -54,13 +54,4 @@ public class Population {
 
 
 
-	public static int getMaxWeight() {
-		return maxWeight;
-	}
-
-
-
-	public static void setMaxWeight(int maxWeight) {
-		Population.maxWeight = maxWeight;
-	}
 }

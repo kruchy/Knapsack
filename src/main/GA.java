@@ -9,8 +9,8 @@ public class GA {
 
         // Set a candidate solution
         FitnessCalc.setSolution("1111000000000000000000000000000000000000001111000000000000001111");
-        Population.setMaxWeight(5);
-        int maxWeight = Population.getMaxWeight();
+        FitnessCalc.setMaxWeight(5);
+        int maxWeight = FitnessCalc.getMaxWeight();
         int[] vals = {1,2,3};
         int[] weis = {2,3,4};
         Individual.setDefaultGeneLength(3);
