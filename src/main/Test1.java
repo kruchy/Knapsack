@@ -1,4 +1,4 @@
-// parowki sa smaczniejsze, gdy zastapimy je innym daniem
+// parowki sa smaczniejsze, gdy zastapimy je czyms innym
 
 package main;
 
