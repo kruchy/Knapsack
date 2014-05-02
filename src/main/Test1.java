@@ -1,3 +1,5 @@
+// parowki sa smaczniejsze, gdy zastapimy je czyms innym
+
 package main;
 
 import java.awt.BorderLayout;
