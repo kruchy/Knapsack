@@ -61,7 +61,7 @@ public class FitnessCalc {
     
     // Get optimum fitness
     public static int getMaxFitness() {
-        int maxFitness = solution.length;
+        int maxFitness = 9999;
         return maxFitness;
     }
 }
