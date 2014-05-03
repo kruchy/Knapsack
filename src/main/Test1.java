@@ -2,6 +2,8 @@
 // zdecyduj siê czy zastêpujesz je innym daniem czy czymœ innym
 package main;
 
+import genetics.*;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -12,11 +14,18 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.JEditorPane;
+import java.awt.Canvas;
+import java.awt.GridBagLayout;
 
 public class Test1 extends JFrame {
 
 	private JPanel contentPane;
 
+	Population pop;
+	Knapsack knap;
 	/**
 	 * Launch the application.
 	 */
@@ -37,6 +46,7 @@ public class Test1 extends JFrame {
 	 * Create the frame.
 	 */
 	public Test1() {
+		knap = new Knapsack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
@@ -44,14 +54,17 @@ public class Test1 extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JPanel centerPanel = new JPanel();
-		contentPane.add(centerPanel, BorderLayout.CENTER);
-		
 		JPanel buttonPanel = new JPanel();
 		contentPane.add(buttonPanel, BorderLayout.NORTH);
 		
 		JButton btnStart = new JButton("Start");
 		buttonPanel.add(btnStart);
+		btnStart.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		
 		JButton btnParameters = new JButton("Parameters");
 		buttonPanel.add(btnParameters);
@@ -59,7 +72,7 @@ public class Test1 extends JFrame {
 		btnParameters.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				ParamFrame paramFrame = new ParamFrame("Parametry");
+				ParamFrame paramFrame = new ParamFrame("Parametry",knap);
 				
 				paramFrame.setVisible(true);
 				
@@ -67,14 +80,41 @@ public class Test1 extends JFrame {
 			}
 		});
 		
+		
 		JButton btnRandomize = new JButton("Randomize");
 		buttonPanel.add(btnRandomize);
+		
+		
+		
+		
+		btnRandomize.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+	
+		JButton btnClose = new JButton("Close");
+		buttonPanel.add(btnClose);
+		btnClose.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				
+				dispose();
+			}
+		});
 		
 		JPanel eastPanel = new JPanel();
 		contentPane.add(eastPanel, BorderLayout.EAST);
 		
 		JPanel paramPanel = new JPanel();
 		contentPane.add(paramPanel, BorderLayout.WEST);
+		
+		JEditorPane editorPane = new JEditorPane();
+		contentPane.add(editorPane, BorderLayout.CENTER);
+		
+		
+	
 	}
 
 }

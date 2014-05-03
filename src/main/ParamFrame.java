@@ -6,22 +6,33 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
+
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
 
 public class ParamFrame extends JFrame {
 
 	private JPanel contentPane;
+	Knapsack knap;
+	private JTextField numItem;
+	private JTextField valItem;
+	private JTextField weightItems;
 
 	/**
 	 * Create the frame.
 	 */
-	public ParamFrame(String name) {
+	public ParamFrame(String name,final Knapsack knap) {
 		super(name);
+		this.knap = knap;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(200, 200, 500, 500);
 		contentPane = new JPanel();
@@ -33,9 +44,9 @@ public class ParamFrame extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{101, 66, 200, 0};
-		gbl_panel.rowHeights = new int[]{23, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowHeights = new int[]{23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblKnapsackSize = new JLabel("Knapsack size");
@@ -55,13 +66,94 @@ public class ParamFrame extends JFrame {
 		gbc_knapSize.gridx = 2;
 		gbc_knapSize.gridy = 0;
 		panel.add(knapSize, gbc_knapSize);
+		knapSize.addChangeListener(new ChangeListener() {
+			
+			public void stateChanged(ChangeEvent arg0) {
+				JSlider zrodlo = (JSlider) arg0.getSource();
+				knap.maxWeight = zrodlo.getValue();
+			}
+		});
 		
-		JLabel lblNewLabel = new JLabel("New label");
+			
+		JLabel lblNewLabel = new JLabel("Number of items");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel.gridx = 1;
 		gbc_lblNewLabel.gridy = 1;
 		panel.add(lblNewLabel, gbc_lblNewLabel);
+		
+		numItem = new JTextField();
+		numItem.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_numItem = new GridBagConstraints();
+		gbc_numItem.insets = new Insets(0, 0, 5, 0);
+		gbc_numItem.fill = GridBagConstraints.HORIZONTAL;
+		gbc_numItem.gridx = 2;
+		gbc_numItem.gridy = 1;
+		panel.add(numItem, gbc_numItem);
+		numItem.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Values");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.anchor = GridBagConstraints.EAST;
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_1.gridx = 1;
+		gbc_lblNewLabel_1.gridy = 2;
+		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		
+		valItem = new JTextField();
+		GridBagConstraints gbc_valItem = new GridBagConstraints();
+		gbc_valItem.insets = new Insets(0, 0, 5, 0);
+		gbc_valItem.fill = GridBagConstraints.HORIZONTAL;
+		gbc_valItem.gridx = 2;
+		gbc_valItem.gridy = 2;
+		panel.add(valItem, gbc_valItem);
+		valItem.setColumns(10);
+		
+		JLabel lblNewLabel_2 = new JLabel("Weights");
+		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		gbc_lblNewLabel_2.anchor = GridBagConstraints.EAST;
+		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_2.gridx = 1;
+		gbc_lblNewLabel_2.gridy = 3;
+		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		
+		weightItems = new JTextField();
+		GridBagConstraints gbc_weightItems = new GridBagConstraints();
+		gbc_weightItems.insets = new Insets(0, 0, 5, 0);
+		gbc_weightItems.fill = GridBagConstraints.HORIZONTAL;
+		gbc_weightItems.gridx = 2;
+		gbc_weightItems.gridy = 3;
+		panel.add(weightItems, gbc_weightItems);
+		weightItems.setColumns(10);
+		
+		JLabel lblNewLabel_3 = new JLabel("New label");
+		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
+		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_3.gridx = 1;
+		gbc_lblNewLabel_3.gridy = 4;
+		panel.add(lblNewLabel_3, gbc_lblNewLabel_3);
+		
+		JButton btnApply_1 = new JButton("Apply");
+		GridBagConstraints gbc_btnApply_1 = new GridBagConstraints();
+		gbc_btnApply_1.insets = new Insets(0, 0, 0, 5);
+		gbc_btnApply_1.gridx = 0;
+		gbc_btnApply_1.gridy = 15;
+		panel.add(btnApply_1, gbc_btnApply_1);
+		
+		JButton btnReset = new JButton("Reset");
+		GridBagConstraints gbc_btnReset = new GridBagConstraints();
+		gbc_btnReset.insets = new Insets(0, 0, 0, 5);
+		gbc_btnReset.gridx = 1;
+		gbc_btnReset.gridy = 15;
+		panel.add(btnReset, gbc_btnReset);
+		
+		JButton btnClose = new JButton("Close");
+		GridBagConstraints gbc_btnClose = new GridBagConstraints();
+		gbc_btnClose.gridx = 2;
+		gbc_btnClose.gridy = 15;
+		panel.add(btnClose, gbc_btnClose);
 	}
 
 }
