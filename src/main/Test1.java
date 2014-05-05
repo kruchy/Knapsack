@@ -24,6 +24,7 @@ public class Test1 extends JFrame {
 
 	private JPanel contentPane;
 
+	ParamFrame paramFrame;
 	Population pop;
 	Knapsack knap;
 	/**
@@ -72,7 +73,7 @@ public class Test1 extends JFrame {
 		btnParameters.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				ParamFrame paramFrame = new ParamFrame("Parametry",knap);
+				paramFrame = new ParamFrame("Parametry",knap);
 				
 				paramFrame.setVisible(true);
 				
@@ -99,7 +100,7 @@ public class Test1 extends JFrame {
 		btnClose.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				
+				if(paramFrame != null) paramFrame.dispose();
 				dispose();
 			}
 		});
