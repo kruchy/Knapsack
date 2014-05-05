@@ -99,7 +99,8 @@ public class ParamFrame extends JFrame {
 		gbc_size.gridy = 1;
 		panel.add(size, gbc_size);
 		size.setColumns(10);
-			
+		size.setText(Integer.toString(knapSize.getMinimum()));
+		
 		JLabel lblNewLabel = new JLabel("Number of items");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
