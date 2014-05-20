@@ -43,12 +43,17 @@ import com.sun.corba.se.impl.orbutil.graph.Graph;
 import com.sun.prism.Graphics;
 
 import java.awt.BorderLayout;
+import javax.swing.JMenuBar;
 
 public class Test1 extends JFrame {
+
+	double tolerance = 0.05;
 
 	ParamFrame paramFrame;
 	Population pop;
 	Knapsack knap;
+
+	boolean initialized = false;
 	private Scanner scan;
 	private JTextField size;
 	private JTextField itemNum;
@@ -84,35 +89,28 @@ public class Test1 extends JFrame {
 		gbc_tabbedPane_1.gridx = 0;
 		gbc_tabbedPane_1.gridy = 0;
 
-		JPopupMenu popupMenu = new JPopupMenu();
-		addPopup(this, popupMenu);
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
 
 		JMenuItem mntmStart = new JMenuItem("Start");
+		menuBar.add(mntmStart);
+
 		mntmStart.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
+				start();
+				
 			}
 		});
-		popupMenu.add(mntmStart);
-
+		
 		JMenuItem mntmSave = new JMenuItem("Save");
-		mntmSave.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
-		popupMenu.add(mntmSave);
+		menuBar.add(mntmSave);
 
 		JMenuItem mntmRandomize = new JMenuItem("Randomize");
-		mntmRandomize.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
-		popupMenu.add(mntmRandomize);
+		menuBar.add(mntmRandomize);
 
 		JMenuItem mntmClose = new JMenuItem("Close");
+		menuBar.add(mntmClose);
 		mntmClose.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -120,7 +118,26 @@ public class Test1 extends JFrame {
 				dispose();
 			}
 		});
-		popupMenu.add(mntmClose);
+		mntmRandomize.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+
+			}
+		});
+		mntmSave.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+				if (initialized)
+					start();
+			}
+		});
+		mntmStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+
+		JPopupMenu popupMenu = new JPopupMenu();
+		addPopup(this, popupMenu);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JTabbedPane tabbedMain = new JTabbedPane(JTabbedPane.TOP);
@@ -161,7 +178,15 @@ public class Test1 extends JFrame {
 		GridBagConstraints gbc_size = new GridBagConstraints();
 		gbc_size.insets = new Insets(0, 0, 5, 0);
 		size.setColumns(2);
-		
+
+		knapSize.addChangeListener(new ChangeListener() {
+
+			public void stateChanged(ChangeEvent arg0) {
+				size.setText("" + knapSize.getValue());
+
+			}
+		});
+
 		gbc_size.fill = GridBagConstraints.HORIZONTAL;
 		gbc_size.gridx = 2;
 		gbc_size.gridy = 1;
@@ -217,7 +242,7 @@ public class Test1 extends JFrame {
 		gbc_weis.gridy = 4;
 		param.add(weis, gbc_weis);
 		weis.setColumns(10);
-		
+
 		JLabel lblPopulationSize = new JLabel("Population size");
 		GridBagConstraints gbc_lblPopulationSize = new GridBagConstraints();
 		gbc_lblPopulationSize.insets = new Insets(0, 0, 5, 5);
@@ -225,7 +250,7 @@ public class Test1 extends JFrame {
 		gbc_lblPopulationSize.gridx = 1;
 		gbc_lblPopulationSize.gridy = 5;
 		param.add(lblPopulationSize, gbc_lblPopulationSize);
-		
+
 		popSize = new JTextField();
 		popSize.setText("50");
 		GridBagConstraints gbc_popSize = new GridBagConstraints();
@@ -243,27 +268,29 @@ public class Test1 extends JFrame {
 		gbc_btnApply.gridy = 6;
 		param.add(btnApply, gbc_btnApply);
 
-		
-		
 		itemNum.setText("0");
 		vals.setText("0");
 		weis.setText("0");
-		
+
 		btnApply.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
 				applyChanges(knap, knapSize);
-
+				try {
+					check();
+					initialized = true;
+				} catch (NotValidInput e){
+				}
 			}
 		});
-		
+
 		JButton btnReset = new JButton("Reset");
 		GridBagConstraints gbc_btnReset = new GridBagConstraints();
 		gbc_btnReset.insets = new Insets(0, 0, 0, 5);
 		gbc_btnReset.gridx = 1;
 		gbc_btnReset.gridy = 6;
 		param.add(btnReset, gbc_btnReset);
-		
+
 		JButton btnRandom = new JButton("Random");
 		GridBagConstraints gbc_btnRandom = new GridBagConstraints();
 		gbc_btnRandom.gridx = 2;
@@ -271,44 +298,66 @@ public class Test1 extends JFrame {
 		param.add(btnRandom, gbc_btnRandom);
 		JPanel graph = new JPanel();
 		tabbedMain.addTab("Graph", null, graph, null);
-
-		btnReset.addActionListener(new ActionListener() {
+		btnRandom.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				weis.setText("0");
-				vals.setText("0");
-				itemNum.setText("0");
+				randomize();
 				
 			}
 		});
 		
-		
+
+		btnReset.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+				weis.setText("0");
+				vals.setText("0");
+				itemNum.setText("0");
+
+			}
+
+		});
+
 	}
 
 	/*
-	 * KONIEC KONSTRUKTORA
-	 * TODO konstruktor
+	 * KONIEC KONSTRUKTORA TODO konstruktor
 	 */
-	
-	
-	
-	
-	
-	
-	
+
+	void start() {
+		int generationCount = 0;
+		Individual fittest;
+		float breakpoint1 = 0, breakpoint2 = 0;
+
+		do {
+			breakpoint1 = breakpoint2;
+			fittest = pop.getFittest(knap.maxWeight);
+			breakpoint2 = fittest.getFitness(fittest.id);
+			generationCount++;
+			System.out.println("Generation: " + generationCount + " Fittest: "
+					+ fittest.getFitness(fittest.id));
+			pop = Algorithm.evolvePopulation(pop, knap.maxWeight);
+			/* dis nids update */
+
+		} while (breakpoint2 - breakpoint1 > tolerance
+				& generationCount <= 1000);
+		System.out.println("Solution found!");
+		System.out.println("Generation: " + generationCount);
+		System.out.println("Genes:");
+		System.out.println(pop.getFittest(knap.maxWeight));
+	}
+
 	void applyChanges(final Knapsack knap, JSlider knapSize) {
-		knap.maxWeight = knapSize.getValue();
-		
+
 		knap.values = getValues();
 		knap.weights = getWeights();
-		FitnessCalc.setMaxWeight(100);
-        int maxWeight = FitnessCalc.getMaxWeight();
-        double tolerance = 0.05;
-        Individual.setDefaultGeneLength(knap.values.length);
-        Individual.values = knap.values ;
-        Individual.weights = knap.weights;
-        Population myPop = new Population(Integer.parseInt(popSize.getText()), true);
-        
+		knap.maxWeight = knapSize.getValue();
+		FitnessCalc.setMaxWeight(knap.maxWeight);
+		tolerance = 0.05;
+		Individual.setDefaultGeneLength(knap.values.length);
+		Individual.values = knap.values;
+		Individual.weights = knap.weights;
+		pop = new Population(Integer.parseInt(popSize.getText()), true);
 	}
 
 	int[] getValues() {
@@ -333,6 +382,32 @@ public class Test1 extends JFrame {
 		return tmpWeis;
 	}
 
+	void check() throws NotValidInput
+	{
+		if (knap.values.length != knap.weights.length) throw new NotValidInput();
+		for(int i=0; i < knap.weights.length; i++)
+		{
+			if (knap.weights[i] == 0) throw new NotValidInput();
+		}
+		if (pop.size() < 1) throw new NotValidInput();
+		
+	}
+	
+	void randomize()
+	{
+		itemNum.setText("" + (int) (Math.random() * 150));
+		int itemNumber = Integer.parseInt(itemNum.getText());
+		String weisText= "",valsText = ""; 
+		
+		for ( int i = 0; i < itemNumber; i++)
+		{
+			weisText +=  (int) (Math.random() * 25) + " ";
+			valsText +=  (int) (Math.random() * 50) + " ";
+		}
+		weis.setText(weisText);
+		vals.setText(valsText);
+	}
+	
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
