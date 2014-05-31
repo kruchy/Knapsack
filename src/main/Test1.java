@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -52,6 +53,8 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import javax.swing.JRadioButton;
+
 public class Test1 extends JFrame {
 
 	double tolerance = 0.05;
@@ -59,7 +62,8 @@ public class Test1 extends JFrame {
 	ParamFrame paramFrame;
 	Population pop;
 	Knapsack knap;
-
+	JRadioButton  rdbtnChanges,rdbtnNumberOfIterations;
+	ButtonGroup bg;
 	ChartPanel chart;
 	XYSeries minFi,maxFi,avgFi;
 	XYSeriesCollection dataset = new XYSeriesCollection(); 
@@ -70,7 +74,8 @@ public class Test1 extends JFrame {
 	private JTextField vals;
 	private JTextField weis;
 	private JTextField popSize;
-
+	private JTextArea solText;
+	private JTextField iterationNum;
 	/**
 	 * Launch the application.
 	 */
@@ -116,8 +121,6 @@ public class Test1 extends JFrame {
 		JMenuItem mntmSave = new JMenuItem("Save");
 		menuBar.add(mntmSave);
 
-		JMenuItem mntmRandomize = new JMenuItem("Randomize");
-		menuBar.add(mntmRandomize);
 
 		JMenuItem mntmClose = new JMenuItem("Close");
 		menuBar.add(mntmClose);
@@ -128,12 +131,7 @@ public class Test1 extends JFrame {
 				dispose();
 			}
 		});
-		mntmRandomize.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
+		
 		mntmSave.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -156,7 +154,7 @@ public class Test1 extends JFrame {
 		JPanel param = new JPanel();
 		
 	
-		JTextPane solText = new JTextPane();
+		solText = new JTextArea();
 		
 		
 		
@@ -168,17 +166,19 @@ public class Test1 extends JFrame {
 		
 		tabbedMain.addTab("Max/Avg/Min Fittness", chart); 
 		
+		solText.setEditable(false);
+		
 		
 		tabbedMain.addTab("Solution", null,solText,null);
 		
 		
 		GridBagLayout gbl_param = new GridBagLayout();
 		gbl_param.columnWidths = new int[] { 0, 0, 0, 0 };
-		gbl_param.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_param.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_param.columnWeights = new double[] { 0.0, 0.0, 1.0,
 				Double.MIN_VALUE };
-		gbl_param.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, Double.MIN_VALUE };
+		gbl_param.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+				0.0, 1.0, Double.MIN_VALUE };
 		param.setLayout(gbl_param);
 
 		JLabel lblKnapsackSize = new JLabel("Knapsack size");
@@ -289,12 +289,30 @@ public class Test1 extends JFrame {
 		gbc_popSize.gridy = 5;
 		param.add(popSize, gbc_popSize);
 		popSize.setColumns(10);
+		
+		JLabel lblIterations = new JLabel("Iterations");
+		GridBagConstraints gbc_lblIterations = new GridBagConstraints();
+		gbc_lblIterations.insets = new Insets(0, 0, 5, 5);
+		gbc_lblIterations.anchor = GridBagConstraints.EAST;
+		gbc_lblIterations.gridx = 1;
+		gbc_lblIterations.gridy = 6;
+		param.add(lblIterations, gbc_lblIterations);
+		
+		iterationNum = new JTextField();
+		iterationNum.setText("1000");
+		GridBagConstraints gbc_iterationNum = new GridBagConstraints();
+		gbc_iterationNum.insets = new Insets(0, 0, 5, 0);
+		gbc_iterationNum.fill = GridBagConstraints.HORIZONTAL;
+		gbc_iterationNum.gridx = 2;
+		gbc_iterationNum.gridy = 6;
+		param.add(iterationNum, gbc_iterationNum);
+		iterationNum.setColumns(10);
 
 		JButton btnApply = new JButton("Apply");
 		GridBagConstraints gbc_btnApply = new GridBagConstraints();
-		gbc_btnApply.insets = new Insets(0, 0, 0, 5);
+		gbc_btnApply.insets = new Insets(0, 0, 5, 5);
 		gbc_btnApply.gridx = 0;
-		gbc_btnApply.gridy = 6;
+		gbc_btnApply.gridy = 7;
 		param.add(btnApply, gbc_btnApply);
 
 		itemNum.setText("0");
@@ -315,17 +333,56 @@ public class Test1 extends JFrame {
 
 		JButton btnReset = new JButton("Reset");
 		GridBagConstraints gbc_btnReset = new GridBagConstraints();
-		gbc_btnReset.insets = new Insets(0, 0, 0, 5);
+		gbc_btnReset.insets = new Insets(0, 0, 5, 5);
 		gbc_btnReset.gridx = 1;
-		gbc_btnReset.gridy = 6;
+		gbc_btnReset.gridy = 7;
 		param.add(btnReset, gbc_btnReset);
 
 		JButton btnRandom = new JButton("Random");
 		GridBagConstraints gbc_btnRandom = new GridBagConstraints();
+		gbc_btnRandom.insets = new Insets(0, 0, 5, 0);
 		gbc_btnRandom.gridx = 2;
-		gbc_btnRandom.gridy = 6;
+		gbc_btnRandom.gridy = 7;
 		param.add(btnRandom, gbc_btnRandom);
+		
+		JPanel panelRadio = new JPanel();
+		GridBagConstraints gbc_panelRadio = new GridBagConstraints();
+		gbc_panelRadio.fill = GridBagConstraints.BOTH;
+		gbc_panelRadio.gridx = 2;
+		gbc_panelRadio.gridy = 8;
+		param.add(panelRadio, gbc_panelRadio);
+		GridBagLayout gbl_panelRadio = new GridBagLayout();
+		gbl_panelRadio.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gbl_panelRadio.rowHeights = new int[]{0, 0};
+		gbl_panelRadio.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panelRadio.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panelRadio.setLayout(gbl_panelRadio);
+		
+		JLabel lblStopCondition = new JLabel("Stop condition");
+		GridBagConstraints gbc_lblStopCondition = new GridBagConstraints();
+		gbc_lblStopCondition.insets = new Insets(0, 0, 0, 5);
+		gbc_lblStopCondition.gridx = 0;
+		gbc_lblStopCondition.gridy = 0;
+		panelRadio.add(lblStopCondition, gbc_lblStopCondition);
+		
+		rdbtnNumberOfIterations = new JRadioButton("Number of iterations");
+		GridBagConstraints gbc_rdbtnNumberOfIterations = new GridBagConstraints();
+		gbc_rdbtnNumberOfIterations.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnNumberOfIterations.gridx = 2;
+		gbc_rdbtnNumberOfIterations.gridy = 0;
+		panelRadio.add(rdbtnNumberOfIterations, gbc_rdbtnNumberOfIterations);
+		//rdbtnNumberOfIterations.setSelected(true);
+		
+		
+		rdbtnChanges = new JRadioButton("Changes");
+		GridBagConstraints gbc_rdbtnChanges = new GridBagConstraints();
+		gbc_rdbtnChanges.gridx = 3;
+		gbc_rdbtnChanges.gridy = 0;
+		panelRadio.add(rdbtnChanges, gbc_rdbtnChanges);
 		JPanel graph = new JPanel();
+		bg = new ButtonGroup();
+		bg.add(rdbtnNumberOfIterations);
+		bg.add(rdbtnChanges);
 		btnRandom.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -356,13 +413,18 @@ public class Test1 extends JFrame {
 
 	void start() {
 		dataset.removeAllSeries();
+		solText.setText("");
 		minFi=  new XYSeries("Minimum fitness");
 		maxFi = new XYSeries("Maximum fitness");
 		avgFi = new XYSeries("Average fitness");
 		int generationCount = 0;
 		Individual fittest,worst;
-		float breakpoint1 = 0, breakpoint2 = 0;
+		scan = new Scanner(iterationNum.getText());
+		float breakpoint1 = 0, breakpoint2 = 1;
+		int iter = scan.nextInt();
+		System.out.println(iter);
 		pop = new Population(Integer.parseInt(popSize.getText()), true);
+		boolean condition;
 		try {
 			check();
 		} catch (NotValidInput e) {
@@ -385,7 +447,9 @@ public class Test1 extends JFrame {
 			/* dis nids update */
 			System.out.println(breakpoint1 + " " + breakpoint2);
 			System.out.println("worst = " +worst.getFitness(worst.id));
-		} while (  /*(breakpoint1 == 0.0 || breakpoint2 == 0.0) && breakpoint2 - breakpoint1 < tolerance   && */ generationCount <= 10 );
+			condition = (rdbtnNumberOfIterations.isSelected()? generationCount <= iter  : Math.abs(breakpoint2 - breakpoint1) > tolerance);
+			System.out.println(condition);
+		} while ( condition );
 		Individual tmp = pop.getFittest(knap.maxWeight);
 		
 		dataset.addSeries(minFi);
@@ -416,9 +480,10 @@ public class Test1 extends JFrame {
 		System.out.println("Solution found!");
 		System.out.println("Generation: " + generationCount);
 		System.out.println("Genes:");
-
 		System.out.println(pop.getFittest(knap.maxWeight));
 		System.out.println("\n" + value + ", waga :" + weight + "\n" );
+		
+		solText.append("\nSolution found!\n"+ "Generation: " + generationCount + "\nGenes:" +  pop.getFittest(knap.maxWeight));
 	}
 
 	void applyChanges(final Knapsack knap, JSlider knapSize) {
@@ -458,6 +523,7 @@ public class Test1 extends JFrame {
 
 	void check() throws NotValidInput
 	{
+		if(!initialized) throw new NotValidInput("Initialize parameters first");
 		if (knap.values.length != knap.weights.length) throw new NotValidInput("Not valid length");
 		for(int i=0; i < knap.weights.length; i++)
 		{
