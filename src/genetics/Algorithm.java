@@ -23,7 +23,7 @@ public class Algorithm {
      */
     public static Population evolvePopulation(Population pop,int maxWeight) {
         Population newPopulation = new Population(pop.size(), false);
-/*
+
         // Best individual
         if (elitism) {
             newPopulation.saveIndividual(0, pop.getFittest(maxWeight));
@@ -36,7 +36,7 @@ public class Algorithm {
         } else {
             elitismOffset = 0;
         }
-  */      // Loop over the population size and create new individuals with
+      // Loop over the population size and create new individuals with
         // crossover
         for (int i = 0; i < pop.size(); i++) {
             Individual indiv1 = tournamentSelection(pop,maxWeight);

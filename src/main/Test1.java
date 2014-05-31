@@ -42,7 +42,15 @@ import com.sun.corba.se.impl.orbutil.graph.Graph;
 import com.sun.prism.Graphics;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JMenuBar;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 public class Test1 extends JFrame {
 
@@ -52,6 +60,9 @@ public class Test1 extends JFrame {
 	Population pop;
 	Knapsack knap;
 
+	ChartPanel chart;
+	XYSeries minFi,maxFi,avgFi;
+	XYSeriesCollection dataset = new XYSeriesCollection(); 
 	boolean initialized = false;
 	private Scanner scan;
 	private JTextField size;
@@ -143,7 +154,24 @@ public class Test1 extends JFrame {
 		getContentPane().add(tabbedMain, BorderLayout.CENTER);
 
 		JPanel param = new JPanel();
+		
+	
+		JTextPane solText = new JTextPane();
+		
+		
+		
 		tabbedMain.addTab("Parameters", null, param, null);
+		chart = new ChartPanel(ChartFactory.createXYLineChart("Max/Avg/Min Fittness", "x", "y", dataset,PlotOrientation.VERTICAL,
+				true, // Show Legend
+				true, // Use tooltips
+				false));
+		
+		tabbedMain.addTab("Max/Avg/Min Fittness", chart); 
+		
+		
+		tabbedMain.addTab("Solution", null,solText,null);
+		
+		
 		GridBagLayout gbl_param = new GridBagLayout();
 		gbl_param.columnWidths = new int[] { 0, 0, 0, 0 };
 		gbl_param.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -277,11 +305,11 @@ public class Test1 extends JFrame {
 
 			public void actionPerformed(ActionEvent arg0) {
 				applyChanges(knap, knapSize);
-				try {
-					check();
+			
+					
 					initialized = true;
-				} catch (NotValidInput e){
-				}
+				
+				
 			}
 		});
 
@@ -298,7 +326,6 @@ public class Test1 extends JFrame {
 		gbc_btnRandom.gridy = 6;
 		param.add(btnRandom, gbc_btnRandom);
 		JPanel graph = new JPanel();
-		tabbedMain.addTab("Graph", null, graph, null);
 		btnRandom.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -318,6 +345,8 @@ public class Test1 extends JFrame {
 			}
 
 		});
+		
+		
 
 	}
 
@@ -326,40 +355,68 @@ public class Test1 extends JFrame {
 	 */
 
 	void start() {
+		dataset.removeAllSeries();
+		minFi=  new XYSeries("Minimum fitness");
+		maxFi = new XYSeries("Maximum fitness");
+		avgFi = new XYSeries("Average fitness");
 		int generationCount = 0;
-		Individual fittest;
+		Individual fittest,worst;
 		float breakpoint1 = 0, breakpoint2 = 0;
-
+		pop = new Population(Integer.parseInt(popSize.getText()), true);
+		try {
+			check();
+		} catch (NotValidInput e) {
+			// TODO Auto-generated catch block
+			System.err.println("buont");
+		}
+		
 		do {
 			breakpoint1 = breakpoint2;
 			fittest = pop.getFittest(knap.maxWeight);
+			worst = pop.getWorst(knap.maxWeight);
 			breakpoint2 = fittest.getFitness(fittest.id);
 			generationCount++;
+			minFi.add(generationCount, worst.getFitness(worst.id));
+			maxFi.add(generationCount, fittest.getFitness(fittest.id));
+			avgFi.add(generationCount, (worst.getFitness(worst.id) + fittest.getFitness(fittest.id)) /2);
 			System.out.println("Generation: " + generationCount + " Fittest: "
 					+ fittest.getFitness(fittest.id));
 			pop = Algorithm.evolvePopulation(pop, knap.maxWeight);
 			/* dis nids update */
-			//System.out.println(breakpoint1 + " pierwszy \n" + breakpoint2 + "drugi \n");
-		} while (breakpoint2 - breakpoint1 > tolerance
-				& generationCount <= 1000);
+			System.out.println(breakpoint1 + " " + breakpoint2);
+			System.out.println("worst = " +worst.getFitness(worst.id));
+		} while (  /*(breakpoint1 == 0.0 || breakpoint2 == 0.0) && breakpoint2 - breakpoint1 < tolerance   && */ generationCount <= 10 );
 		Individual tmp = pop.getFittest(knap.maxWeight);
+		
+		dataset.addSeries(minFi);
+		dataset.addSeries(maxFi);
+		dataset.addSeries(avgFi);
 
+		chart = new ChartPanel(ChartFactory.createXYLineChart("Max/Avg/Min Fittness", "x", "y", dataset,PlotOrientation.VERTICAL,
+				true, // Show Legend
+				true, // Use tooltips
+				false));
+		
+		
+		
 		int value = 0, weight = 0;
 		for(int i = 0; i < tmp.values.length; i++)
 		{ 
 			if(tmp.getGene(i)== 1){
-				value += tmp.values[i];
-				weight += tmp.weights[i];
+				value += Individual.values[i];
+				weight += Individual.weights[i];
 			}
 			
 			
 		}
-		
+		for(int j = 0; j < pop.size(); j++)
+		{
+		//	System.out.println(pop.getIndividual(j));
+		}
 		System.out.println("Solution found!");
 		System.out.println("Generation: " + generationCount);
 		System.out.println("Genes:");
 
-		System.out.println("chuj");
 		System.out.println(pop.getFittest(knap.maxWeight));
 		System.out.println("\n" + value + ", waga :" + weight + "\n" );
 	}
@@ -374,7 +431,7 @@ public class Test1 extends JFrame {
 		Individual.setDefaultGeneLength(knap.values.length);
 		Individual.values = knap.values;
 		Individual.weights = knap.weights;
-		pop = new Population(Integer.parseInt(popSize.getText()), true);
+		
 	}
 
 	int[] getValues() {

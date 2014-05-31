@@ -8,7 +8,7 @@ public class GA {
         int[] vals = {1,2,3,5,6,7,8,9,11,2,3,4,3,5,2,1,5,6,5,7,3,4,5,2,21,5,6,3,4,2,6,3,4,2,1,5,1,2,4,6,8,5,4,2,3,4,6,23,43,5,2};
         int[] weis = {2,3,4,1,5,2,6,3,3,22,5,4,3,4,6,3,2,3,3,4,6,3,4,5,11,1,2,3,5,3,4,5,6,5,5,4,3,2,2,4,6,7,5,6,7,4,3,10,15,2,2};
         // Create an initial population
-        FitnessCalc.setMaxWeight(100);
+        FitnessCalc.setMaxWeight(10);
         int maxWeight = FitnessCalc.getMaxWeight();
         double tolerance = 0.05;
         Individual.setDefaultGeneLength(weis.length);
@@ -35,6 +35,17 @@ public class GA {
         System.out.println("Generation: " + generationCount);
         System.out.println("Genes:ghujghu");System.out.println("chuj");
         System.out.println(myPop.getFittest(maxWeight));
-
+        Individual tmp = myPop.getFittest(maxWeight);
+        int value = 0, weight = 0;
+		for(int i = 0; i < tmp.values.length; i++)
+		{ 
+			if(tmp.getGene(i)== 1){
+				value += tmp.values[i];
+				weight += tmp.weights[i];
+			}
+			
+			
+		}
+		System.out.println("\n" + value + ", waga :" + weight + "\n" );
     }
 }

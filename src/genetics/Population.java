@@ -15,7 +15,7 @@ public class Population {
             // Loop and create individuals
             for (int i = 0; i < size(); i++) {
                 Individual newIndividual = new Individual(i);
-                newIndividual.generateIndividual();
+                newIndividual.generateZeroIndividual();
                 saveIndividual(i, newIndividual);
             }
         }
@@ -39,6 +39,19 @@ public class Population {
             }
         }
         return fittest;
+    }
+    public Individual getWorst(int maxWeight){
+    	int j=0;
+    	Individual worst = getFittest(maxWeight);
+    	
+        // Loop through individuals to find fittest
+        for (int i = 0; i < size(); i++) {
+        	Individual tmp = getIndividual(i) ;
+            if (worst.getFitness(worst.id) > tmp.getFitness(tmp.id) && tmp.getFitness(tmp.id) > 0 ) {
+                worst = getIndividual(i);
+            }
+        }
+        return worst;
     }
 
     /* Public methods */

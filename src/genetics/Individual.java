@@ -30,6 +30,14 @@ public class Individual {
             genes[i] = gene;
         }
     }
+    
+    public void generateZeroIndividual()
+    {
+    	for (int i = 0; i < size(); i++) {
+            
+            genes[i] = 0;
+        }
+    }
 
     /* Getters and setters */
     // Use this if you want to create individuals with different gene lengths
