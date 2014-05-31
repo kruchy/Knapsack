@@ -1,7 +1,6 @@
 // parowki sa smaczniejsze, gdy zastapimy je czyms innym
 // zdecyduj siê czy zastêpujesz je innym daniem czy czymœ innym
 package main;
-
 import genetics.*;
 
 import java.awt.EventQueue;
@@ -170,7 +169,8 @@ public class Test1 extends JFrame {
 		param.add(knapSize, gbc_knapSize);
 		knapSize.setMajorTickSpacing(1);
 		knapSize.setMinorTickSpacing(1);
-		knapSize.setMaximum(50);
+		knapSize.setMaximum(100);
+		knapSize.setMinimum(1);
 		knapSize.setPaintTicks(true);
 		knapSize.setPaintTrack(true);
 		size = new JTextField();
@@ -178,7 +178,7 @@ public class Test1 extends JFrame {
 		GridBagConstraints gbc_size = new GridBagConstraints();
 		gbc_size.insets = new Insets(0, 0, 5, 0);
 		size.setColumns(2);
-
+		size.setText("1");
 		knapSize.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent arg0) {
@@ -191,7 +191,8 @@ public class Test1 extends JFrame {
 		gbc_size.gridx = 2;
 		gbc_size.gridy = 1;
 		param.add(size, gbc_size);
-
+		
+		
 		JLabel lblNumberOfItems = new JLabel("Number of items");
 		GridBagConstraints gbc_lblNumberOfItems = new GridBagConstraints();
 		gbc_lblNumberOfItems.insets = new Insets(0, 0, 5, 5);
@@ -208,7 +209,7 @@ public class Test1 extends JFrame {
 		gbc_itemNum.gridy = 2;
 		param.add(itemNum, gbc_itemNum);
 		itemNum.setColumns(10);
-
+		
 		JLabel lblValues = new JLabel("Values");
 		GridBagConstraints gbc_lblValues = new GridBagConstraints();
 		gbc_lblValues.insets = new Insets(0, 0, 5, 5);
@@ -338,13 +339,29 @@ public class Test1 extends JFrame {
 					+ fittest.getFitness(fittest.id));
 			pop = Algorithm.evolvePopulation(pop, knap.maxWeight);
 			/* dis nids update */
-
+			//System.out.println(breakpoint1 + " pierwszy \n" + breakpoint2 + "drugi \n");
 		} while (breakpoint2 - breakpoint1 > tolerance
 				& generationCount <= 1000);
+		Individual tmp = pop.getFittest(knap.maxWeight);
+
+		int value = 0, weight = 0;
+		for(int i = 0; i < tmp.values.length; i++)
+		{ 
+			if(tmp.getGene(i)== 1){
+				value += tmp.values[i];
+				weight += tmp.weights[i];
+			}
+			
+			
+		}
+		
 		System.out.println("Solution found!");
 		System.out.println("Generation: " + generationCount);
 		System.out.println("Genes:");
+
+		System.out.println("chuj");
 		System.out.println(pop.getFittest(knap.maxWeight));
+		System.out.println("\n" + value + ", waga :" + weight + "\n" );
 	}
 
 	void applyChanges(final Knapsack knap, JSlider knapSize) {
@@ -384,12 +401,12 @@ public class Test1 extends JFrame {
 
 	void check() throws NotValidInput
 	{
-		if (knap.values.length != knap.weights.length) throw new NotValidInput();
+		if (knap.values.length != knap.weights.length) throw new NotValidInput("Not valid length");
 		for(int i=0; i < knap.weights.length; i++)
 		{
-			if (knap.weights[i] == 0) throw new NotValidInput();
+			if (knap.weights[i] == 0) throw new NotValidInput("Weight cannot be 0");
 		}
-		if (pop.size() < 1) throw new NotValidInput();
+		if (pop.size() < 1) throw new NotValidInput("Too small population");
 		
 	}
 	
@@ -401,7 +418,7 @@ public class Test1 extends JFrame {
 		
 		for ( int i = 0; i < itemNumber; i++)
 		{
-			weisText +=  (int) (Math.random() * 25) + " ";
+			weisText +=  (int) ((Math.random() * 24)+1) + " ";
 			valsText +=  (int) (Math.random() * 50) + " ";
 		}
 		weis.setText(weisText);

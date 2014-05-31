@@ -34,7 +34,7 @@ public class Population {
         // Loop through individuals to find fittest
         for (int i = 0; i < size(); i++) {
         	Individual tmp = getIndividual(i) ;
-            if (fittest.getFitness(fittest.id) <= tmp.getFitness(tmp.id)) {
+            if (fittest.getFitness(fittest.id) < tmp.getFitness(tmp.id)) {
                 fittest = getIndividual(i);
             }
         }
