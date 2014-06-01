@@ -25,18 +25,17 @@ public class Individual {
     
     // Create a random individual
     public void generateIndividual() {
-        for (int i = 0; i < size(); i++) {
+        /*for (int i = 0; i < size(); i++) {
             byte gene = (byte) Math.round(Math.random());
             genes[i] = gene;
-        }
+        }*/
+        java.util.Arrays.fill(genes, (byte) Math.round(Math.random()) );
     }
     
     public void generateZeroIndividual()
     {
-    	for (int i = 0; i < size(); i++) {
-            
-            genes[i] = 0;
-        }
+
+        java.util.Arrays.fill(genes, (byte) 0 );
     }
 
     /* Getters and setters */

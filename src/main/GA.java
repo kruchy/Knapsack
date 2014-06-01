@@ -33,7 +33,7 @@ public class GA {
     	while (breakpoint2 - breakpoint1 > tolerance  & generationCount <= 1000);
         System.out.println("Solution found!");
         System.out.println("Generation: " + generationCount);
-        System.out.println("Genes:ghujghu");System.out.println("chuj");
+        System.out.println("Genes:");
         System.out.println(myPop.getFittest(maxWeight));
         Individual tmp = myPop.getFittest(maxWeight);
         int value = 0, weight = 0;

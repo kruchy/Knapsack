@@ -118,9 +118,6 @@ public class Test1 extends JFrame {
 			}
 		});
 		
-		JMenuItem mntmSave = new JMenuItem("Save");
-		menuBar.add(mntmSave);
-
 
 		JMenuItem mntmClose = new JMenuItem("Close");
 		menuBar.add(mntmClose);
@@ -132,17 +129,7 @@ public class Test1 extends JFrame {
 			}
 		});
 		
-		mntmSave.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-				if (initialized)
-					start();
-			}
-		});
-		mntmStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
+	
 
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(this, popupMenu);
@@ -422,7 +409,7 @@ public class Test1 extends JFrame {
 		scan = new Scanner(iterationNum.getText());
 		float breakpoint1 = 0, breakpoint2 = 1;
 		int iter = scan.nextInt();
-		System.out.println(iter);
+	
 		pop = new Population(Integer.parseInt(popSize.getText()), true);
 		boolean condition;
 		try {
@@ -441,14 +428,12 @@ public class Test1 extends JFrame {
 			minFi.add(generationCount, worst.getFitness(worst.id));
 			maxFi.add(generationCount, fittest.getFitness(fittest.id));
 			avgFi.add(generationCount, (worst.getFitness(worst.id) + fittest.getFitness(fittest.id)) /2);
-			System.out.println("Generation: " + generationCount + " Fittest: "
-					+ fittest.getFitness(fittest.id));
 			pop = Algorithm.evolvePopulation(pop, knap.maxWeight);
-			/* dis nids update */
+	/*		System.out.println("Generation: " + generationCount + " Fittest: "	+ fittest.getFitness(fittest.id));
 			System.out.println(breakpoint1 + " " + breakpoint2);
 			System.out.println("worst = " +worst.getFitness(worst.id));
-			condition = (rdbtnNumberOfIterations.isSelected()? generationCount <= iter  : Math.abs(breakpoint2 - breakpoint1) > tolerance);
-			System.out.println(condition);
+	*/		condition = (rdbtnNumberOfIterations.isSelected()? generationCount <= iter  : Math.abs(breakpoint2 - breakpoint1) > tolerance);
+		//	System.out.println(condition);
 		} while ( condition );
 		Individual tmp = pop.getFittest(knap.maxWeight);
 		
@@ -461,28 +446,13 @@ public class Test1 extends JFrame {
 				true, // Use tooltips
 				false));
 		
-		
-		
-		int value = 0, weight = 0;
-		for(int i = 0; i < tmp.values.length; i++)
-		{ 
-			if(tmp.getGene(i)== 1){
-				value += Individual.values[i];
-				weight += Individual.weights[i];
-			}
-			
-			
-		}
-		for(int j = 0; j < pop.size(); j++)
-		{
-		//	System.out.println(pop.getIndividual(j));
-		}
+		/*
 		System.out.println("Solution found!");
 		System.out.println("Generation: " + generationCount);
 		System.out.println("Genes:");
 		System.out.println(pop.getFittest(knap.maxWeight));
 		System.out.println("\n" + value + ", waga :" + weight + "\n" );
-		
+		*/
 		solText.append("\nSolution found!\n"+ "Generation: " + generationCount + "\nGenes:" +  pop.getFittest(knap.maxWeight));
 	}
 

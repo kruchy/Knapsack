@@ -76,6 +76,7 @@ public class Algorithm {
                 // Create random gene
                 byte gene = (byte) Math.round(Math.random());
                 indiv.setGene(i, gene);
+           
             }
         }
     }
