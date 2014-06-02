@@ -1,7 +1,7 @@
 package genetics;
 
 /**
- * Wszêdzie wciska³em maxWeight ¿eby to jakoœ ograniczyc
+ * 
  * 
  * @author Kruchy
  *
@@ -38,7 +38,7 @@ public class Algorithm {
         }
       // Loop over the population size and create new individuals with
         // crossover
-        for (int i = 0; i < pop.size(); i++) {
+        for (int i = elitismOffset; i < pop.size(); i++) {
             Individual indiv1 = tournamentSelection(pop,maxWeight);
             Individual indiv2 = tournamentSelection(pop,maxWeight);
             Individual newIndiv = crossover(indiv1, indiv2);
