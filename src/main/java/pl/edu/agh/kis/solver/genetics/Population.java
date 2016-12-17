@@ -1,4 +1,4 @@
-package genetics;
+package pl.edu.agh.kis.solver.genetics;
 public class Population {
 	
 	Individual[] individuals;

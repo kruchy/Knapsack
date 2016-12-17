@@ -1,27 +1,24 @@
-package genetics;
+package pl.edu.agh.kis.solver.genetics;
 
 /**
- * 
- * 
  * @author Kruchy
- *
  */
 public class Algorithm {
 
-    
+
     private static final double uniformRate = 0.5;
     private static final double mutationRate = 0.015;
     private static final int tournamentSize = 5;
     private static final boolean elitism = true;
    
-    /* Public methods */
-    
+
     /**
      * Evolve the population with tournament selection.
+     *
      * @param pop population
-     * @return  new population
+     * @return new population
      */
-    public static Population evolvePopulation(Population pop,int maxWeight) {
+    public static Population evolvePopulation(Population pop, int maxWeight) {
         Population newPopulation = new Population(pop.size(), false);
 
         // Best individual
@@ -36,11 +33,11 @@ public class Algorithm {
         } else {
             elitismOffset = 0;
         }
-      // Loop over the population size and create new individuals with
+        // Loop over the population size and create new individuals with
         // crossover
         for (int i = elitismOffset; i < pop.size(); i++) {
-            Individual indiv1 = tournamentSelection(pop,maxWeight);
-            Individual indiv2 = tournamentSelection(pop,maxWeight);
+            Individual indiv1 = tournamentSelection(pop, maxWeight);
+            Individual indiv2 = tournamentSelection(pop, maxWeight);
             Individual newIndiv = crossover(indiv1, indiv2);
             newPopulation.saveIndividual(i, newIndiv);
         }
@@ -76,13 +73,13 @@ public class Algorithm {
                 // Create random gene
                 byte gene = (byte) Math.round(Math.random());
                 indiv.setGene(i, gene);
-           
+
             }
         }
     }
 
     // Select individuals for crossover
-    private static Individual tournamentSelection(Population pop,int maxWeight) {
+    private static Individual tournamentSelection(Population pop, int maxWeight) {
         // Create a tournament population
         Population tournament = new Population(tournamentSize, false);
         // For each place in the tournament get a random individual

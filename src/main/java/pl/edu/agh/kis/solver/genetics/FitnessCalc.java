@@ -1,4 +1,4 @@
-package genetics;
+package pl.edu.agh.kis.solver.genetics;
 
 public class FitnessCalc {
 
@@ -13,8 +13,6 @@ public class FitnessCalc {
 	public static void setMaxWeight(int maxWeight) {
 		FitnessCalc.maxWeight = maxWeight;
 	}
-    /* Public methods */
-    // Set a candidate solution as a byte array
     public static void setSolution(byte[] newSolution) {
         solution = newSolution;
     }
@@ -35,13 +33,6 @@ public class FitnessCalc {
         }
     }
 
-    /**
-     * doda³em maxWeigth, do roboty funkcja oceny
-     * @param individual
-     * @param id
-     * @param maxWeight
-     * @return
-     */
     // Calculate inidividuals fittness by comparing it to our candidate solution
     static float getFitness(Individual individual,int id) {
         int fitness = 0,value = 0,weight = 0;

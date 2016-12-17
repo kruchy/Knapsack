@@ -1,27 +1,15 @@
-package main;
+package pl.edu.agh.kis.solver.genetics;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import pl.edu.agh.kis.solver.Knapsack;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.JSlider;
-import javax.swing.JLabel;
-
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
-
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
 
 public class ParamFrame extends JFrame {
 
@@ -36,7 +24,7 @@ public class ParamFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ParamFrame(String name,final Knapsack knap) {
+	public ParamFrame(String name, final Knapsack knap) {
 		super(name);
 		
 		this.knap = knap;
