@@ -1,1 +1,11 @@
-/bin
+### Java template
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+.idea
+.gitattributes
+
