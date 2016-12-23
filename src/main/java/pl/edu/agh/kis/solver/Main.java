@@ -6,13 +6,10 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import pl.edu.agh.kis.solver.genetics.*;
+import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Scanner;
@@ -23,7 +20,7 @@ public class Main extends JFrame {
     double tolerance = 0.05;
 
     ParamFrame paramFrame;
-    Population pop;
+    PopulationImpl pop;
     Knapsack knap;
     JRadioButton rdbtnChanges, rdbtnNumberOfIterations;
     ButtonGroup bg;
@@ -59,7 +56,7 @@ public class Main extends JFrame {
      */
     public Main() {
         knap = new Knapsack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setBounds(100, 100, 600, 400);
         GridBagConstraints gbc_tabbedPane_1 = new GridBagConstraints();
         gbc_tabbedPane_1.fill = GridBagConstraints.BOTH;
@@ -72,23 +69,12 @@ public class Main extends JFrame {
         JMenuItem mntmStart = new JMenuItem("Start");
         menuBar.add(mntmStart);
 
-        mntmStart.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-                start();
-
-            }
-        });
+        mntmStart.addActionListener(arg0 -> start());
 
 
         JMenuItem mntmClose = new JMenuItem("Close");
         menuBar.add(mntmClose);
-        mntmClose.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-                dispose();
-            }
-        });
+        mntmClose.addActionListener(arg0 -> dispose());
 
 
         JPopupMenu popupMenu = new JPopupMenu();
@@ -153,13 +139,7 @@ public class Main extends JFrame {
         gbc_size.insets = new Insets(0, 0, 5, 0);
         size.setColumns(2);
         size.setText("1");
-        knapSize.addChangeListener(new ChangeListener() {
-
-            public void stateChanged(ChangeEvent arg0) {
-                size.setText("" + knapSize.getValue());
-
-            }
-        });
+        knapSize.addChangeListener(arg0 -> size.setText("" + knapSize.getValue()));
 
         gbc_size.fill = GridBagConstraints.HORIZONTAL;
         gbc_size.gridx = 2;
@@ -218,7 +198,7 @@ public class Main extends JFrame {
         param.add(weis, gbc_weis);
         weis.setColumns(10);
 
-        JLabel lblPopulationSize = new JLabel("Population size");
+        JLabel lblPopulationSize = new JLabel("PopulationImpl size");
         GridBagConstraints gbc_lblPopulationSize = new GridBagConstraints();
         gbc_lblPopulationSize.insets = new Insets(0, 0, 5, 5);
         gbc_lblPopulationSize.anchor = GridBagConstraints.EAST;
@@ -265,16 +245,13 @@ public class Main extends JFrame {
         vals.setText("0");
         weis.setText("0");
 
-        btnApply.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-                applyChanges(knap, knapSize);
+        btnApply.addActionListener(arg0 -> {
+            applyChanges(knap, knapSize);
 
 
-                initialized = true;
+            initialized = true;
 
 
-            }
         });
 
         JButton btnReset = new JButton("Reset");
@@ -317,7 +294,6 @@ public class Main extends JFrame {
         gbc_rdbtnNumberOfIterations.gridx = 2;
         gbc_rdbtnNumberOfIterations.gridy = 0;
         panelRadio.add(rdbtnNumberOfIterations, gbc_rdbtnNumberOfIterations);
-        //rdbtnNumberOfIterations.setSelected(true);
 
 
         rdbtnChanges = new JRadioButton("Changes");
@@ -329,32 +305,18 @@ public class Main extends JFrame {
         bg = new ButtonGroup();
         bg.add(rdbtnNumberOfIterations);
         bg.add(rdbtnChanges);
-        btnRandom.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-                randomize();
-
-            }
-        });
+        btnRandom.addActionListener(arg0 -> randomize());
 
 
-        btnReset.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent arg0) {
-                weis.setText("0");
-                vals.setText("0");
-                itemNum.setText("0");
-
-            }
+        btnReset.addActionListener(arg0 -> {
+            weis.setText("0");
+            vals.setText("0");
+            itemNum.setText("0");
 
         });
 
 
     }
-
-	/*
-     * KONIEC KONSTRUKTORA TODO konstruktor
-	 */
 
     void start() {
         dataset.removeAllSeries();
@@ -363,16 +325,17 @@ public class Main extends JFrame {
         maxFi = new XYSeries("Maximum fitness");
         avgFi = new XYSeries("Average fitness");
         int generationCount = 0;
-        Individual fittest, worst;
+        Schedule fittest;
+        Schedule worst;
         scan = new Scanner(iterationNum.getText());
         float breakpoint1 = 0, breakpoint2 = 1;
         int iter = scan.nextInt();
 
-        pop = new Population(Integer.parseInt(popSize.getText()), true);
+        pop = new PopulationImpl(Integer.parseInt(popSize.getText()), true);
         boolean condition;
         try {
             check();
-        } catch (NotValidInput e) {
+        } catch (NotValidInput ignored) {
         }
 
         do {
@@ -385,14 +348,9 @@ public class Main extends JFrame {
             maxFi.add(generationCount, fittest.getFitness(fittest.id));
             avgFi.add(generationCount, (worst.getFitness(worst.id) + fittest.getFitness(fittest.id)) / 2);
             pop = Algorithm.evolvePopulation(pop, knap.maxWeight);
-    /*		System.out.println("Generation: " + generationCount + " Fittest: "	+ fittest.getFitness(fittest.id));
-			System.out.println(breakpoint1 + " " + breakpoint2);
-			System.out.println("worst = " +worst.getFitness(worst.id));
-	*/
             condition = (rdbtnNumberOfIterations.isSelected() ? generationCount <= iter : Math.abs(breakpoint2 - breakpoint1) > tolerance);
-            //	System.out.println(condition);
         } while (condition);
-        Individual tmp = pop.getFittest(knap.maxWeight);
+        Schedule tmp = pop.getFittest(knap.maxWeight);
 
         dataset.addSeries(minFi);
         dataset.addSeries(maxFi);
@@ -403,21 +361,12 @@ public class Main extends JFrame {
                 true, // Use tooltips
                 false));
         int value = 0, weight = 0;
-        for (int i = 0; i < Individual.values.length; i++) {
-            if (tmp.getGene(i) == 1) {
-                value += Individual.values[i];
-                weight += Individual.weights[i];
-            }
+        for (int i = 0; i < Schedule.values.length; i++) {
+//            if (tmp.getGene(i) == 1) {
+//                value += Schedule.values[i];
+//                weight += Schedule.weights[i];
+//            }
         }
-
-
-		/*
-		System.out.println("Solution found!");
-		System.out.println("Generation: " + generationCount);
-		System.out.println("Genes:");
-		System.out.println(pop.getFittest(knap.maxWeight));
-		System.out.println("\n" + value + ", waga :" + weight + "\n" );
-		*/
         solText.append("\nSolution found!\n" + "Generation: " + generationCount + "\nGenes:" + pop.getFittest(knap.maxWeight) + "\n Total worth: " + value + "\n Total weight: " + weight);
 
     }
@@ -429,9 +378,9 @@ public class Main extends JFrame {
         knap.maxWeight = knapSize.getValue();
         FitnessCalc.setMaxWeight(knap.maxWeight);
         tolerance = 0.05;
-        Individual.setDefaultGeneLength(knap.values.length);
-        Individual.values = knap.values;
-        Individual.weights = knap.weights;
+        Schedule.setDefaultDetailNumber(knap.values.length);
+        Schedule.values = knap.values;
+        Schedule.weights = knap.weights;
 
     }
 

@@ -5,6 +5,7 @@ public class Individual {
 
     static int defaultGeneLength = 64;
     private byte[] genes;
+
     public static int[] values;
     public static int[] weights;
     // Cache
@@ -20,8 +21,6 @@ public class Individual {
         this.id = id;
     }
 
-
-    // Create a random individual
     public void generateIndividual() {
 
         java.util.Arrays.fill(genes, (byte) Math.round(Math.random()));
@@ -55,16 +54,15 @@ public class Individual {
         weights = weis;
     }
 
-    /* Public methods */
     public int size() {
         return genes.length;
     }
 
     public float getFitness(int id) {
-        if (fitness == 0) {
-            fitness = FitnessCalc.getFitness(this, id);
-        }
-        return fitness;
+//        if (fitness == 0) {
+//            fitness = FitnessCalc.getFitness(this);
+//        }
+        return 0;
     }
 
     public String toString() {
