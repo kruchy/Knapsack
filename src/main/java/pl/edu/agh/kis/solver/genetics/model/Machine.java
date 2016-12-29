@@ -1,28 +1,24 @@
 package pl.edu.agh.kis.solver.genetics.model;
 
-public class Machine {
-    String description;
-    int id;
+public class Machine
+{
+    final String description;
+    final int id;
 
-    public Machine(int id) {
+    public Machine(int id)
+    {
         this.description = Machine.class + " " + id;
         this.id = id;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
 }

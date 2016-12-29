@@ -1,25 +1,39 @@
 package pl.edu.agh.kis.solver.genetics.model;
 
-public class Detail {
+import java.util.List;
 
+public class Detail
+{
 
-    private int id;
-    private String desctiption;
+    private static List<Detail> details;
+    final private int id;
+    final private String desctiption;
 
-    Detail(int id) {
+    Detail(int id)
+    {
         this.id = id;
         this.desctiption = "Detail" + id;
     }
 
-    public String getDesctiption() {
+    public String getDesctiption()
+    {
         return desctiption;
     }
 
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public static List<Detail> getDetails()
+    {
+        return details;
+    }
+
+    public static Detail createDetail(int id)
+    {
+        Detail detail = new Detail(id);
+        details.add(detail);
+        return detail;
     }
 }

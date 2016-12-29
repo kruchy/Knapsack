@@ -1,33 +1,113 @@
 package pl.edu.agh.kis.solver.genetics;
 
+import java.util.List;
 
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
-import java.util.ArrayList;
-import java.util.List;
+public class SchedulePopulation implements Population
+{
 
-public class SchedulePopulation implements Population {
-    private List<Schedule> schedules;
-    private List<Process> processes;
+    Schedule[] schedules;
 
-    public SchedulePopulation(List<Process> processes) {
-        this.processes = processes;
-        this.schedules = new ArrayList<Schedule>();
+    /*
+     * Constructors
+     */
+    // Create a population
+    public SchedulePopulation(int populationSize, boolean initialise)
+    {
+        schedules = new Schedule[populationSize];
+
+        // Initialize population
+        if (initialise)
+        {
+            // Loop and create schedules
+            for (int i = 0; i < size(); i++)
+            {
+                Schedule newIndividual = new Schedule(i);
+                newIndividual.generateZeroSchedule();
+                saveIndividual(i, newIndividual);
+            }
+        }
+
     }
 
-    public void generatePopulation() {
+    public SchedulePopulation(SchedulePopulation schedulePopulation)
+    {
 
     }
 
-    public void mutate() {
+    /* Getters */
+    public Schedule getIndividual(int index)
+    {
+        return schedules[index];
+    }
+
+    public Schedule getFittest(int maxWeight)
+    {
+        Schedule fittest = schedules[0];
+        // Loop through schedules to find fittest
+        for (int i = 0; i < size(); i++)
+        {
+            Schedule tmp = getIndividual(i);
+            if (fittest.getFitness(fittest.id) < tmp.getFitness(tmp.id))
+            {
+                fittest = getIndividual(i);
+            }
+        }
+        return fittest;
+    }
+
+    public Schedule getWorst(int maxWeight)
+    {
+        int j = 0;
+        Schedule worst = getFittest(maxWeight);
+
+        // Loop through schedules to find fittest
+        for (int i = 0; i < size(); i++)
+        {
+            Schedule tmp = getIndividual(i);
+            if (worst.getFitness(worst.id) > tmp.getFitness(tmp.id) && tmp.getFitness(tmp.id) > 0)
+            {
+                worst = getIndividual(i);
+            }
+        }
+        return worst;
+    }
+
+    /* Public methods */
+    // Get population size
+    public int size()
+    {
+        return schedules.length;
+    }
+
+    // Save individual
+    public void saveIndividual(int index, Schedule schedule)
+    {
+        schedules[index] = schedule;
+    }
+
+    @Override
+    public void generatePopulation()
+    {
 
     }
 
-    public void crossover(Schedule schedule1, Schedule schedule2) {
+    @Override
+    public void mutate()
+    {
 
     }
 
-    public List<Schedule> selectFittest(FitnessCalc calculator) {
+    @Override
+    public void crossover(Schedule schedule1, Schedule schedule2)
+    {
+
+    }
+
+    @Override
+    public List<Schedule> selectFittest(FitnessCalc calculator)
+    {
         return null;
     }
 }

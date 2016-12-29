@@ -20,7 +20,7 @@ public class Main extends JFrame {
     double tolerance = 0.05;
 
     ParamFrame paramFrame;
-    PopulationImpl pop;
+    SchedulePopulation pop;
     Knapsack knap;
     JRadioButton rdbtnChanges, rdbtnNumberOfIterations;
     ButtonGroup bg;
@@ -331,7 +331,7 @@ public class Main extends JFrame {
         float breakpoint1 = 0, breakpoint2 = 1;
         int iter = scan.nextInt();
 
-        pop = new PopulationImpl(Integer.parseInt(popSize.getText()), true);
+        pop = new SchedulePopulation(Integer.parseInt(popSize.getText()), true);
         boolean condition;
         try {
             check();

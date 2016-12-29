@@ -20,12 +20,12 @@ public class Algorithm {
      * @param pop population
      * @return new population
      */
-    public static PopulationImpl evolvePopulation(PopulationImpl pop, int maxWeight) {
-        PopulationImpl newPopulationImpl = new PopulationImpl(pop.size(), false);
+    public static SchedulePopulation evolvePopulation(SchedulePopulation pop, int maxWeight) {
+        SchedulePopulation newSchedulePopulation = new SchedulePopulation(pop.size(), false);
 
         // Best individual
         if (elitism) {
-            newPopulationImpl.saveIndividual(0, pop.getFittest(maxWeight));
+            newSchedulePopulation.saveIndividual(0, pop.getFittest(maxWeight));
         }
 
         // Crossover population
@@ -47,11 +47,11 @@ public class Algorithm {
         }
 
         // Mutate population
-        for (int i = 0; i < newPopulationImpl.size(); i++) {
-            mutate(newPopulationImpl.getIndividual(i));
+        for (int i = 0; i < newSchedulePopulation.size(); i++) {
+            mutate(newSchedulePopulation.getIndividual(i));
         }
 
-        return newPopulationImpl;
+        return newSchedulePopulation;
     }
 
     // Crossover schedules
@@ -83,9 +83,9 @@ public class Algorithm {
     }
 
     // Select schedules for crossover
-    private static Schedule tournamentSelection(PopulationImpl pop, int maxWeight) {
+    private static Schedule tournamentSelection(SchedulePopulation pop, int maxWeight) {
         // Create a tournament population
-        PopulationImpl tournament = new PopulationImpl(tournamentSize, false);
+        SchedulePopulation tournament = new SchedulePopulation(tournamentSize, false);
         // For each place in the tournament get a random individual
         for (int i = 0; i < tournamentSize; i++) {
             int randomId = (int) (Math.random() * pop.size());
