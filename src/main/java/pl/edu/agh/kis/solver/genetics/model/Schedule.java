@@ -17,7 +17,7 @@ public class Schedule {
     public static int[] values;
     public static int[] weights;
     private float fitness = 0;
-    public int id;
+    public Integer id;
     private Map<Machine, List<Process>> machinesProcesses;
 
     public Schedule() {
@@ -82,5 +82,15 @@ public class Schedule {
                 .map(Process::getDetail)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    public List<Process> getJobsForDetail(Integer id) {
+        return machinesProcesses.entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
+                .filter(process -> process.getDetail().getId().equals(id))
+                .collect(Collectors.toList());
+
     }
 }

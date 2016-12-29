@@ -4,7 +4,7 @@ public class Process {
 
     final Machine machine;
     final Detail detail;
-    final int operationTime;
+    final Integer operationTime;
 
     public Process(Machine machine, Detail detail, int operationTime) {
         this.machine = machine;
@@ -20,7 +20,7 @@ public class Process {
         return detail;
     }
 
-    public int getOperationTime() {
+    public Integer getOperationTime() {
         return operationTime;
     }
 

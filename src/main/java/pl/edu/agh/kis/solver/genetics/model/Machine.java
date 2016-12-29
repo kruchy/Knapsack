@@ -1,29 +1,25 @@
 package pl.edu.agh.kis.solver.genetics.model;
 
+import java.util.Objects;
+
 public class Machine {
-    String description;
-    int id;
+    final String description;
+    final Integer id;
 
     public Machine(int id) {
         this.description = Machine.class + " " + id;
         this.id = id;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -32,8 +28,7 @@ public class Machine {
 
         Machine machine = (Machine) o;
 
-        if (getId() != machine.getId()) return false;
-        return getDescription().equals(machine.getDescription());
+        return Objects.equals(getId(), machine.getId()) && getDescription().equals(machine.getDescription());
     }
 
     @Override

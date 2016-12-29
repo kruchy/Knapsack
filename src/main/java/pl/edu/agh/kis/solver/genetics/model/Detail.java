@@ -1,9 +1,11 @@
 package pl.edu.agh.kis.solver.genetics.model;
 
+import java.util.Objects;
+
 public class Detail {
 
 
- final   private int id;
+    final private Integer id;
     final   private String desctiption;
 
     Detail(int id) {
@@ -15,7 +17,7 @@ public class Detail {
         return desctiption;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -26,8 +28,7 @@ public class Detail {
 
         Detail detail = (Detail) o;
 
-        if (getId() != detail.getId()) return false;
-        return getDesctiption().equals(detail.getDesctiption());
+        return Objects.equals(getId(), detail.getId()) && getDesctiption().equals(detail.getDesctiption());
     }
 
     @Override

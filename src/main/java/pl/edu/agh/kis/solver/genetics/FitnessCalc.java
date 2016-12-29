@@ -1,9 +1,13 @@
 package pl.edu.agh.kis.solver.genetics;
 
+import pl.edu.agh.kis.solver.genetics.model.Machine;
+import pl.edu.agh.kis.solver.genetics.model.Process;
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FitnessCalc {
 
@@ -45,6 +49,13 @@ public class FitnessCalc {
 //        	}
 //        }
 //        if(weight > FitnessCalc.getMaxWeight()) return 0 ;
+
+        Set<Map.Entry<Machine, List<Process>>> entries = schedule.getSchedule().entrySet();
+        for (int i = 0; i < entries.size() - 1; i++) {
+        }
+
+
+
         return value;
     }
 
