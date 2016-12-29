@@ -17,14 +17,14 @@ public class PopulationImpl implements Population {
         schedules = new Schedule[populationSize];
 
         // Initialize population
-        if (initialise) {
-            // Loop and create schedules
-            for (int i = 0; i < size(); i++) {
-                Schedule newIndividual = new Schedule(i);
-                newIndividual.generateZeroSchedule();
-                saveIndividual(i, newIndividual);
-            }
-        }
+//        if (initialise) {
+//             Loop and create schedules
+//            for (int i = 0; i < size(); i++) {
+//                Schedule newIndividual = new Schedule(i);
+//                newIndividual.generateZeroSchedule();
+//                saveIndividual(i, newIndividual);
+//            }
+//        }
 
     }
 

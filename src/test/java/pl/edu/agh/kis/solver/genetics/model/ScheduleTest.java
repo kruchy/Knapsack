@@ -5,6 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -25,16 +30,22 @@ public class ScheduleTest {
     public void name() throws Exception {
         schedule.generateSchedule();
         assertThat(schedule.getSchedule(), is(not(nullValue())));
-        assertThat(schedule.getSchedule(), hasSize(0));
     }
 
     @Test
-    public void generateZeroSchedule_shouldBe5() throws Exception {
-        Schedule.defaultDetailNumber = 5;
-        schedule.generateZeroSchedule();
+    public void generateZeroSchedule_shouldHave3Machines() throws Exception {
+
+        List<Process> processes = IntStream.rangeClosed(1, 3).boxed()
+                .map(i -> IntStream.rangeClosed(1, 3).boxed().collect(toList()))
+                .flatMap(Collection::stream)
+                .map(i -> new Process(new Machine(i), new Detail(i), 1)).collect(toList());
+
+        schedule.generateZeroSchedule(processes);
 
         assertThat(schedule.getSchedule(), is(not(nullValue())));
-        assertThat(schedule.getSchedule(), hasSize(5));
-
+        assertThat(schedule.getMachines(), hasSize(3));
+        assertThat(schedule.getDetails(), hasSize(3));
     }
+
+
 }

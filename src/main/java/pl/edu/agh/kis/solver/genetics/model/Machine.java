@@ -25,4 +25,21 @@ public class Machine {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Machine machine = (Machine) o;
+
+        if (getId() != machine.getId()) return false;
+        return getDescription().equals(machine.getDescription());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getDescription().hashCode();
+        result = 31 * result + getId();
+        return result;
+    }
 }

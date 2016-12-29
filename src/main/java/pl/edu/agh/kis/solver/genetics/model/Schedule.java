@@ -2,11 +2,13 @@ package pl.edu.agh.kis.solver.genetics.model;
 
 import pl.edu.agh.kis.solver.genetics.FitnessCalc;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.groupingBy;
 
 public class Schedule {
 
@@ -16,7 +18,7 @@ public class Schedule {
     public static int[] weights;
     private float fitness = 0;
     public int id;
-    private List<Process> processes;
+    private Map<Machine, List<Process>> machinesProcesses;
 
     public Schedule() {
     }
@@ -25,19 +27,16 @@ public class Schedule {
         this.id = id;
     }
 
-    public List<Process> getSchedule() {
-        return this.processes;
+    public Map<Machine, List<Process>> getSchedule() {
+        return this.machinesProcesses;
     }
 
     public void generateSchedule() {
-        processes = new ArrayList<>();
+        machinesProcesses = new HashMap<>();
     }
 
-    public void generateZeroSchedule() {
-        Machine machineForId = MachineSupplier.getMachineForId(1);
-        processes = IntStream.rangeClosed(1, defaultDetailNumber).boxed()
-                .map(i -> new Process(machineForId, new Detail(i)))
-                .collect(toList());
+    public void generateZeroSchedule(List<Process> processes) {
+        machinesProcesses = processes.stream().collect(groupingBy(Process::getMachine));
     }
 
     public static void setDefaultDetailNumber(int length) {
@@ -46,14 +45,6 @@ public class Schedule {
         weights = new int[defaultDetailNumber];
     }
 
-
-    public void setValues(int[] vals) {
-        values = vals;
-    }
-
-    public void setWeights(int[] weis) {
-        weights = weis;
-    }
 
     public float getFitness(int id) {
         if (fitness == 0) {
@@ -64,5 +55,32 @@ public class Schedule {
 
     public static Schedule randomSchedule() {
         return new Schedule();
+    }
+
+    public Machine getMachine(int id) {
+        return machinesProcesses
+                .keySet()
+                .stream()
+                .filter(machine -> machine.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<Machine> getMachines() {
+        return machinesProcesses
+                .keySet()
+                .stream()
+                .collect(Collectors.toList());
+    }
+
+    public List<Detail> getDetails() {
+        return machinesProcesses
+                .entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
+                .map(Process::getDetail)
+                .distinct()
+                .collect(Collectors.toList());
     }
 }
