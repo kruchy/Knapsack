@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -40,8 +41,8 @@ public class ScheduleTest {
     @Test
     public void generateZeroSchedule_shouldHave3Machines() {
 
-        List<Process> processes = getProcesses();
-
+        List<Process> processes = fromMatrix();
+        List<String> stringStream = getProcesses().stream().map(process -> process.getDetail().getDesctiption() + "  on" + process.getMachine().getDescription()).collect(toList());
         schedule.generateZeroSchedule(processes);
 
         assertThat(schedule.getSchedule(), is(not(nullValue())));
@@ -51,10 +52,17 @@ public class ScheduleTest {
 
     @Test
     public void shouldReturnSortedJobList() {
-        schedule.generateZeroSchedule(getProcesses());
+        schedule.generateZeroSchedule(fromMatrix());
 
         List<Process> jobs = schedule.getJobsForDetail(1);
-        assertThat(jobs, is(sorted(comparing(Process::getOperationTime))));
+        assertThat(jobs, is(sorted(comparing(Process::getOperationTime).reversed())));
+    }
+
+
+    @Test
+    public void shouldReturn() throws Exception {
+
+
     }
 
     private Matcher<List<Process>> sorted(final Comparator<Process> comparing) {
@@ -64,6 +72,7 @@ public class ScheduleTest {
                 return processes
                         .stream()
                         .sorted(comparing)
+
                         .collect(toList()).equals(processes.stream().collect(toList()));
             }
 
@@ -78,8 +87,18 @@ public class ScheduleTest {
         return IntStream.rangeClosed(1, 3).boxed()
                 .map(i -> IntStream.rangeClosed(1, 3).boxed().collect(toList()))
                 .flatMap(Collection::stream)
-                .map(i -> new Process(new Machine(i), new Detail(i), 1)).collect(toList());
+                .map(i -> new Process(new Machine(i), new Detail(i), 1, i + 5)).collect(toList());
     }
 
-
+    private List<Process> fromMatrix() {
+        int[][] arr = new int[3][3];
+        List<Process> processes = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                arr[i][j] = (j + 1) * (i + 1);
+                processes.add(new Process(new Machine(i), new Detail(j), i * j, i + j));
+            }
+        }
+        return processes;
+    }
 }

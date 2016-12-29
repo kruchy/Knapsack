@@ -6,10 +6,13 @@ public class Process {
     final Detail detail;
     final Integer operationTime;
 
-    public Process(Machine machine, Detail detail, int operationTime) {
+    final private int startTime;
+
+    public Process(Machine machine, Detail detail, int operationTime, int startTime) {
         this.machine = machine;
         this.detail = detail;
         this.operationTime = operationTime;
+        this.startTime = startTime;
     }
 
     public Machine getMachine() {
@@ -18,6 +21,10 @@ public class Process {
 
     public Detail getDetail() {
         return detail;
+    }
+
+    public int getStartTime() {
+        return startTime;
     }
 
     public Integer getOperationTime() {

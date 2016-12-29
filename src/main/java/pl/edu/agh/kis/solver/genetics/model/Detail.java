@@ -6,15 +6,37 @@ public class Detail {
 
 
     final private Integer id;
-    final   private String desctiption;
+
+    final private Integer minStartTime;
+
+    final private Integer maxFinishTime;
+    final private String desctiption;
 
     Detail(int id) {
         this.id = id;
+        this.desctiption = "Detail" + id;
+        this.minStartTime = 0;
+        this.maxFinishTime = 999;
+    }
+
+    public Detail(Integer id, Integer minStartTime, Integer maxFinishTime) {
+        this.id = id;
+        this.minStartTime = minStartTime;
+        this.maxFinishTime = maxFinishTime;
         this.desctiption = "Detail" + id;
     }
 
     public String getDesctiption() {
         return desctiption;
+    }
+
+
+    public Integer getMinStartTime() {
+        return minStartTime;
+    }
+
+    public Integer getMaxFinishTime() {
+        return maxFinishTime;
     }
 
     public Integer getId() {

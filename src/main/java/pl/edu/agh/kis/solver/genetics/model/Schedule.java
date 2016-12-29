@@ -93,4 +93,29 @@ public class Schedule {
                 .collect(Collectors.toList());
 
     }
+
+    public boolean isAnyProcessOverlapping() {
+        boolean isOverlapping = false;
+        for (Detail detail : getDetails()) {
+            List<Process> jobsForDetail = getJobsForDetail(detail.getId());
+            isOverlapping = isAnyProcessOverlapping(jobsForDetail);
+        }
+        for (Map.Entry<Machine, List<Process>> machineListEntry : machinesProcesses.entrySet()) {
+            List<Process> processes = machineListEntry.getValue();
+            isOverlapping = isAnyProcessOverlapping(processes);
+        }
+        return isOverlapping;
+    }
+
+    private boolean isAnyProcessOverlapping(List<Process> processes) {
+        boolean isOverlapping = false;
+        for (int i = 0; i < processes.size() - 1; i++) {
+            Process process = processes.get(i);
+            Process nextProcess = processes.get(i + 1);
+            if (process.getStartTime() + process.getOperationTime() <= nextProcess.getStartTime()) {
+                isOverlapping = true;
+            }
+        }
+        return isOverlapping;
+    }
 }
