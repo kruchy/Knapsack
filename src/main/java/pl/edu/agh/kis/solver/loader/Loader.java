@@ -1,8 +1,10 @@
-package pl.edu.agh.kis.solver.file;
+package pl.edu.agh.kis.solver.loader;
+
+import pl.edu.agh.kis.solver.NotValidInput;
 
 import java.util.List;
 
-public interface Builder<T>
+public interface Loader<T>
 {
-    List<T> build();
+    List<T> loadFromInput(List<String> input) throws NotValidInput;
 }
