@@ -1,87 +1,121 @@
 package pl.edu.agh.kis.solver.genetics.model;
 
-import static java.util.stream.Collectors.toList;
+import pl.edu.agh.kis.solver.genetics.FitnessCalc;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 
-public class Schedule
-{
+import static java.util.stream.Collectors.groupingBy;
+
+public class Schedule {
 
     static int defaultDetailNumber = 4;
 
     public static int[] values;
     public static int[] weights;
     private float fitness = 0;
-    public int id;
+    public Integer id;
     private Map<Machine, List<Process>> machinesProcesses;
 
-    public Schedule()
-    {
+    public Schedule() {
     }
 
-    public Schedule(int id)
-    {
+    public Schedule(int id) {
         this.id = id;
     }
 
-    public Schedule(Map<Machine, List<Process>> machinesProcesses)
-    {
-        this.machinesProcesses =machinesProcesses;
-    }
-
-    public Map<Machine, List<Process>> getProcesses()
-    {
+    public Map<Machine, List<Process>> getSchedule() {
         return this.machinesProcesses;
     }
 
-    public void generateSchedule()
-    {
+    public void generateSchedule() {
         machinesProcesses = new HashMap<>();
     }
 
-    public void generateZeroSchedule()
-    {
-        Machine machineForId = MachineSupplier.getMachineForId(1);
-//        processes = IntStream.rangeClosed(1, defaultDetailNumber)
-//                .boxed()
-//                .map(i -> new Process(machineForId, new Detail(i), 1))
-//                .collect(toList());
+    public void generateZeroSchedule(List<Process> processes) {
+        machinesProcesses = processes.stream().collect(groupingBy(Process::getMachine));
     }
 
-    public static void setDefaultDetailNumber(int length)
-    {
+    public static void setDefaultDetailNumber(int length) {
         defaultDetailNumber = length;
         values = new int[defaultDetailNumber];
         weights = new int[defaultDetailNumber];
     }
 
-    public void setValues(int[] vals)
-    {
-        values = vals;
-    }
 
-    public void setWeights(int[] weis)
-    {
-        weights = weis;
-    }
-
-    public float getFitness(int id)
-    {
-        if (fitness == 0)
-        {
-            // fitness = FitnessCalc.getFitness(this);
+    public float getFitness(int id) {
+        if (fitness == 0) {
+            fitness = FitnessCalc.getFitness(this);
         }
         return fitness;
     }
 
-    public static Schedule randomSchedule()
-    {
+    public static Schedule randomSchedule() {
         return new Schedule();
     }
 
+    public Machine getMachine(int id) {
+        return machinesProcesses
+                .keySet()
+                .stream()
+                .filter(machine -> machine.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
 
+    public List<Machine> getMachines() {
+        return machinesProcesses
+                .keySet()
+                .stream()
+                .collect(Collectors.toList());
+    }
+
+    public List<Detail> getDetails() {
+        return machinesProcesses
+                .entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
+                .map(Process::getDetail)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<Process> getJobsForDetail(Integer id) {
+        return machinesProcesses.entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
+                .filter(process -> process.getDetail().getId().equals(id))
+                .collect(Collectors.toList());
+
+    }
+
+    public boolean isAnyProcessOverlapping() {
+        boolean isOverlapping = false;
+        for (Detail detail : getDetails()) {
+            List<Process> jobsForDetail = getJobsForDetail(detail.getId());
+            isOverlapping = isAnyProcessOverlapping(jobsForDetail);
+        }
+        for (Map.Entry<Machine, List<Process>> machineListEntry : machinesProcesses.entrySet()) {
+            List<Process> processes = machineListEntry.getValue();
+            isOverlapping = isAnyProcessOverlapping(processes);
+        }
+        return isOverlapping;
+    }
+
+    private boolean isAnyProcessOverlapping(List<Process> processes) {
+        boolean isOverlapping = false;
+        for (int i = 0; i < processes.size() - 1; i++) {
+            Process process = processes.get(i);
+            Process nextProcess = processes.get(i + 1);
+            if (process.getStartTime() + process.getOperationTime() <= nextProcess.getStartTime()) {
+                isOverlapping = true;
+            }
+        }
+        return isOverlapping;
+    }
 }
