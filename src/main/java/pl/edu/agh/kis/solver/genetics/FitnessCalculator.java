@@ -20,28 +20,12 @@ public class FitnessCalculator {
         solution = newSolution;
     }
 
-    // To make it easier we can use this method to set our candidate solution 
-    // with string of 0s and 1s
+
     public void setSolution(String newSolution) {
-        solution = new ArrayList<>();
-        // Loop through each character of our string and save it in our byte 
-        // array
 
     }
 
-    // Calculate inidividuals fittness by comparing it to our candidate solution
     public int getFitness(Schedule schedule) {
-        int value = 0, weight = 0;
-//        // Loop through our schedules genes and compare them to our cadidates
-//        for (int i = 0; i < individual.size(); i++) {
-//
-//        	if(individual.getGene(i) == 1 ){
-//        		value += Individual.values[i];
-//            	weight += Individual.weights[i];
-//
-//        	}
-//        }
-//        if(weight > FitnessCalculator.getMaxWeight()) return 0 ;
 
         int fitness = 0;
 
