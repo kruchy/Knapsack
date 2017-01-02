@@ -7,8 +7,6 @@ import java.util.List;
 
 public class FileParser implements Parser
 {
-
-
     @Override
     public List<String> getFileLines(String fileName) throws IOException
     {
