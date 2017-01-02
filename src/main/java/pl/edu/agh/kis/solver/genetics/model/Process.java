@@ -2,11 +2,11 @@ package pl.edu.agh.kis.solver.genetics.model;
 
 public class Process {
 
-    final Machine machine;
-    final Detail detail;
-    final Integer operationTime;
+    private final Machine machine;
+    private final Detail detail;
+    private final Integer operationTime;
 
-    final private int startTime;
+    final private Integer startTime;
 
     public Process(Machine machine, Detail detail, int operationTime, int startTime) {
         this.machine = machine;
@@ -23,7 +23,7 @@ public class Process {
         return detail;
     }
 
-    public int getStartTime() {
+    public Integer getStartTime() {
         return startTime;
     }
 

@@ -13,7 +13,7 @@ public interface Population {
 
     void crossover(Schedule schedule1, Schedule schedule2);
 
-    List<Schedule> selectFittest(FitnessCalc calculator);
+    List<Schedule> selectFittest(FitnessCalculator calculator);
 
 
 }

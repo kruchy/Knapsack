@@ -7,11 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.edu.agh.kis.solver.loader.ProcessLoader;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.util.Comparator.comparing;
@@ -33,20 +31,10 @@ public class ScheduleTest {
     }
 
     @Test
-    public void name() {
-        schedule.generateSchedule();
-        assertThat(schedule.getSchedule(), is(not(nullValue())));
-    }
-
-    @Test
     public void generateZeroSchedule_shouldHave3Machines() {
 
         List<Process> processes = fromMatrix();
-        List<String> stringStream = fromMatrix()
-                .stream()
-                .map(process -> process.getDetail().getDescription() + "  on" + process.getMachine().getDescription())
-                .collect(toList());
-        schedule.generateZeroSchedule(processes);
+        schedule = new Schedule(processes);
 
         assertThat(schedule.getSchedule(), is(not(nullValue())));
         assertThat(schedule.getMachines(), hasSize(3));
@@ -55,14 +43,19 @@ public class ScheduleTest {
 
     @Test
     public void shouldReturnSortedJobList() {
-        schedule.generateZeroSchedule(fromMatrix());
+        schedule = new Schedule(fromMatrix());
 
         List<Process> jobs = schedule.getJobsForDetail(1);
-        assertThat(jobs, is(sorted(comparing(Process::getOperationTime).reversed())));
+        assertThat(jobs, is(sorted(comparing(Process::getOperationTime))));
     }
 
     @Test
-    public void shouldReturn() throws Exception {
+    public void shouldBeOverlapping() throws Exception {
+        List<String> input = Arrays.asList("0,1 1,2 4,3", "1,2 3,3 8,1", "5,2 7,4 11,1");
+        List<Process> processes = new ProcessLoader().loadWithStartTime(input);
+        Schedule schedule = new Schedule(processes);
+
+        assertThat(schedule.isOverlapping(), is(false));
 
     }
 

@@ -5,7 +5,9 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import pl.edu.agh.kis.solver.genetics.*;
+import pl.edu.agh.kis.solver.genetics.Algorithm;
+import pl.edu.agh.kis.solver.genetics.ParamFrame;
+import pl.edu.agh.kis.solver.genetics.SchedulePopulation;
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
 import javax.swing.*;
@@ -331,7 +333,7 @@ public class Main extends JFrame {
         float breakpoint1 = 0, breakpoint2 = 1;
         int iter = scan.nextInt();
 
-        pop = new SchedulePopulation(Integer.parseInt(popSize.getText()), true);
+        pop = new SchedulePopulation(Integer.parseInt(popSize.getText()));
         boolean condition;
         try {
             check();
@@ -376,7 +378,7 @@ public class Main extends JFrame {
         knap.values = getValues();
         knap.weights = getWeights();
         knap.maxWeight = knapSize.getValue();
-        FitnessCalc.setMaxWeight(knap.maxWeight);
+//        FitnessCalculator.setMaxWeight(knap.maxWeight);
         tolerance = 0.05;
         Schedule.setDefaultDetailNumber(knap.values.length);
         Schedule.values = knap.values;

@@ -1,14 +1,15 @@
 package pl.edu.agh.kis.solver.genetics.model;
 
-import pl.edu.agh.kis.solver.genetics.FitnessCalc;
+import pl.edu.agh.kis.solver.genetics.FitnessCalculator;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public class Schedule {
 
@@ -21,10 +22,15 @@ public class Schedule {
     private Map<Machine, List<Process>> machinesProcesses;
     private List<Detail> details;
     private List<Machine> machines;
+    private List<Process> processes;
 
     public Schedule(List<Detail> details, List<Machine> machines, List<Process> processes) {
         this.details = details;
         this.machines = machines;
+        this.processes = processes.stream()
+                .sorted(comparing(p -> ((Process) p).getMachine().getId())
+                        .thenComparing(comparing(o -> ((Process) o).getStartTime())))
+                .collect(Collectors.toList());
         generateZeroSchedule(processes);
     }
 
@@ -35,12 +41,32 @@ public class Schedule {
         this.id = id;
     }
 
-    public Map<Machine, List<Process>> getSchedule() {
-        return this.machinesProcesses;
+    public Schedule(List<Process> loadedProcesses) {
+        this.processes = loadedProcesses.stream()
+                .sorted(comparing(p -> ((Process) p).getMachine().getId())
+                        .thenComparing(comparing(o -> ((Process) o).getStartTime())))
+                .collect(Collectors.toList());
+        this.machines = loadedProcesses
+                .stream()
+                .map(Process::getMachine)
+                .distinct()
+                .sorted(Comparator.comparing(Machine::getId))
+                .collect(Collectors.toList());
+        this.details = loadedProcesses
+                .stream()
+                .map(Process::getDetail)
+                .distinct()
+                .sorted(Comparator.comparing(Detail::getId))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<Process> getSchedule() {
+        return this.processes;
     }
 
     public void generateSchedule() {
-        machinesProcesses = new HashMap<>();
+
     }
 
     public void generateZeroSchedule(List<Process> processes) {
@@ -56,7 +82,7 @@ public class Schedule {
 
     public float getFitness(int id) {
         if (fitness == 0) {
-            fitness = FitnessCalc.getFitness(this);
+            fitness = new FitnessCalculator().getFitness(this);
         }
         return fitness;
     }
@@ -75,40 +101,41 @@ public class Schedule {
     }
 
     public List<Machine> getMachines() {
-        return machinesProcesses
-                .keySet()
-                .stream()
-                .collect(Collectors.toList());
+        return machines;
     }
 
     public List<Detail> getDetails() {
-        return machinesProcesses
-                .entrySet()
-                .stream()
-                .map(Map.Entry::getValue)
-                .flatMap(Collection::stream)
-                .map(Process::getDetail)
-                .distinct()
-                .collect(Collectors.toList());
+        return details;
     }
 
     public List<Process> getJobsForDetail(Integer id) {
-        return machinesProcesses.entrySet()
-                .stream()
-                .map(Map.Entry::getValue)
-                .flatMap(Collection::stream)
-                .filter(process -> process.getDetail().getId().equals(id))
-                .collect(Collectors.toList());
 
+        return processes
+                .stream()
+                .filter(process -> process.getDetail().getId().equals(id))
+                .collect(toList());
     }
 
-    public boolean isAnyProcessOverlapping() {
+    public Map<Detail, List<Process>> getDetailSchedule() {
+        return processes
+                .stream()
+                .collect(groupingBy(Process::getDetail));
+    }
+
+    public Map<Machine, List<Process>> getMachineSchedule() {
+        return processes
+                .stream()
+                .collect(groupingBy(Process::getMachine));
+    }
+
+
+    public boolean isOverlapping() {
         boolean isOverlapping = false;
         for (Detail detail : getDetails()) {
             List<Process> jobsForDetail = getJobsForDetail(detail.getId());
             isOverlapping = isAnyProcessOverlapping(jobsForDetail);
         }
-        for (Map.Entry<Machine, List<Process>> machineListEntry : machinesProcesses.entrySet()) {
+        for (Map.Entry<Machine, List<Process>> machineListEntry : getMachineSchedule().entrySet()) {
             List<Process> processes = machineListEntry.getValue();
             isOverlapping = isAnyProcessOverlapping(processes);
         }
@@ -120,7 +147,7 @@ public class Schedule {
         for (int i = 0; i < processes.size() - 1; i++) {
             Process process = processes.get(i);
             Process nextProcess = processes.get(i + 1);
-            if (process.getStartTime() + process.getOperationTime() <= nextProcess.getStartTime()) {
+            if (process.getStartTime() + process.getOperationTime() > nextProcess.getStartTime()) {
                 isOverlapping = true;
             }
         }

@@ -7,7 +7,7 @@ public class Machine {
     final Integer id;
 
     public Machine(int id) {
-        this.description = Machine.class + " " + id;
+        this.description = Machine.class.getSimpleName() + " " + id;
         this.id = id;
     }
 

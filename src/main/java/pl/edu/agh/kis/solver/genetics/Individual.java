@@ -60,7 +60,7 @@ public class Individual {
 
     public float getFitness(int id) {
 //        if (fitness == 0) {
-//            fitness = FitnessCalc.getFitness(this);
+//            fitness = FitnessCalculator.getFitness(this);
 //        }
         return 0;
     }

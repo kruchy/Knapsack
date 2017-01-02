@@ -21,7 +21,9 @@ public class Algorithm {
      * @return new population
      */
     public static SchedulePopulation evolvePopulation(SchedulePopulation pop, int maxWeight) {
-        SchedulePopulation newSchedulePopulation = new SchedulePopulation(pop.size(), false);
+        SchedulePopulation newSchedulePopulation = new SchedulePopulation(pop.size());
+
+
 
         // Best individual
         if (elitism) {
@@ -85,7 +87,7 @@ public class Algorithm {
     // Select schedules for crossover
     private static Schedule tournamentSelection(SchedulePopulation pop, int maxWeight) {
         // Create a tournament population
-        SchedulePopulation tournament = new SchedulePopulation(tournamentSize, false);
+        SchedulePopulation tournament = new SchedulePopulation(tournamentSize);
         // For each place in the tournament get a random individual
         for (int i = 0; i < tournamentSize; i++) {
             int randomId = (int) (Math.random() * pop.size());

@@ -1,8 +1,8 @@
 package pl.edu.agh.kis.solver.genetics;
 
-import java.util.List;
-
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
+
+import java.util.List;
 
 public class SchedulePopulation implements Population
 {
@@ -13,7 +13,7 @@ public class SchedulePopulation implements Population
      * Constructors
      */
     // Create a population
-    public SchedulePopulation(int populationSize, boolean initialise)
+    public SchedulePopulation(int populationSize)
     {
         schedules = new Schedule[populationSize];
 
@@ -106,7 +106,7 @@ public class SchedulePopulation implements Population
     }
 
     @Override
-    public List<Schedule> selectFittest(FitnessCalc calculator)
+    public List<Schedule> selectFittest(FitnessCalculator calculator)
     {
         return null;
     }

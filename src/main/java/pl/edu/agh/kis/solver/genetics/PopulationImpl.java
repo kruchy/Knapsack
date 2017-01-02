@@ -88,7 +88,7 @@ public class PopulationImpl implements Population {
     }
 
     @Override
-    public List<Schedule> selectFittest(FitnessCalc calculator) {
+    public List<Schedule> selectFittest(FitnessCalculator calculator) {
         return null;
     }
 }
