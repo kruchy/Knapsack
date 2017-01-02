@@ -19,6 +19,14 @@ public class Schedule {
     private float fitness = 0;
     public Integer id;
     private Map<Machine, List<Process>> machinesProcesses;
+    private List<Detail> details;
+    private List<Machine> machines;
+
+    public Schedule(List<Detail> details, List<Machine> machines, List<Process> processes) {
+        this.details = details;
+        this.machines = machines;
+        generateZeroSchedule(processes);
+    }
 
     public Schedule() {
     }
