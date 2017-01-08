@@ -66,7 +66,6 @@ public class FitnessCalculatorTest {
         int delaysForMachines = new FitnessCalculator().getDelaysForDetails(schedule);
 
         assertThat(delaysForMachines, is(equalTo(3)));
-
     }
 
     @Test
@@ -77,7 +76,6 @@ public class FitnessCalculatorTest {
         int fitness = new FitnessCalculator().getFitness(schedule);
 
         assertThat(fitness, is(equalTo(9)));
-
     }
 
 

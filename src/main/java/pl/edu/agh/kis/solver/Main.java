@@ -6,6 +6,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import pl.edu.agh.kis.solver.genetics.Algorithm;
+import pl.edu.agh.kis.solver.genetics.FitnessCalculator;
 import pl.edu.agh.kis.solver.genetics.ParamFrame;
 import pl.edu.agh.kis.solver.genetics.SchedulePopulation;
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
@@ -342,17 +343,17 @@ public class Main extends JFrame {
 
         do {
             breakpoint1 = breakpoint2;
-            fittest = pop.getFittest(knap.maxWeight);
-            worst = pop.getWorst(knap.maxWeight);
+            fittest = pop.selectFittest(new FitnessCalculator());
+            worst = pop.getWorst(new FitnessCalculator());
             breakpoint2 = fittest.getFitness(fittest.id);
             generationCount++;
             minFi.add(generationCount, worst.getFitness(worst.id));
             maxFi.add(generationCount, fittest.getFitness(fittest.id));
             avgFi.add(generationCount, (worst.getFitness(worst.id) + fittest.getFitness(fittest.id)) / 2);
-            pop = Algorithm.evolvePopulation(pop, knap.maxWeight);
+            pop = Algorithm.evolvePopulation(pop);
             condition = (rdbtnNumberOfIterations.isSelected() ? generationCount <= iter : Math.abs(breakpoint2 - breakpoint1) > tolerance);
         } while (condition);
-        Schedule tmp = pop.getFittest(knap.maxWeight);
+        Schedule tmp = pop.selectFittest(new FitnessCalculator());
 
         dataset.addSeries(minFi);
         dataset.addSeries(maxFi);
@@ -369,7 +370,7 @@ public class Main extends JFrame {
 //                weight += Schedule.weights[i];
 //            }
         }
-        solText.append("\nSolution found!\n" + "Generation: " + generationCount + "\nGenes:" + pop.getFittest(knap.maxWeight) + "\n Total worth: " + value + "\n Total weight: " + weight);
+        solText.append("\nSolution found!\n" + "Generation: " + generationCount + "\nGenes:" + pop.selectFittest(new FitnessCalculator()) + "\n Total worth: " + value + "\n Total weight: " + weight);
 
     }
 
@@ -414,7 +415,7 @@ public class Main extends JFrame {
         for (int i = 0; i < knap.weights.length; i++) {
             if (knap.weights[i] == 0) throw new NotValidInput("Weight cannot be 0");
         }
-        if (pop.size() < 1) throw new NotValidInput("Too small population");
+//        if (pop.size() < 1) throw new NotValidInput("Too small population");
 
     }
 

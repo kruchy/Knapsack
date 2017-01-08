@@ -50,12 +50,22 @@ public class ScheduleTest {
     }
 
     @Test
-    public void shouldBeOverlapping() throws Exception {
+    public void shouldNotBeOverlapping() throws Exception {
         List<String> input = Arrays.asList("0,1 1,2 4,3", "1,2 3,3 8,1", "5,2 7,4 11,1");
         List<Process> processes = new ProcessLoader().loadWithStartTime(input);
         Schedule schedule = new Schedule(processes);
 
         assertThat(schedule.isOverlapping(), is(false));
+
+    }
+
+    @Test
+    public void shouldBeOverlapping() throws Exception {
+        List<String> input = Arrays.asList("3,1 1,2 2,3", "2,4 3,5 2,6", "1,7 8,8 2,9");
+        List<Process> processes = new ProcessLoader().loadWithStartTime(input);
+        Schedule schedule = new Schedule(processes);
+
+        assertThat(schedule.isOverlapping(), is(true));
 
     }
 

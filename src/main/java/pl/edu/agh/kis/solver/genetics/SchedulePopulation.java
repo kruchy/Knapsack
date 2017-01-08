@@ -1,113 +1,113 @@
 package pl.edu.agh.kis.solver.genetics;
 
+import pl.edu.agh.kis.solver.genetics.model.Process;
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
-public class SchedulePopulation implements Population
-{
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
-    Schedule[] schedules;
+public class SchedulePopulation implements Population {
 
-    /*
-     * Constructors
-     */
-    // Create a population
-    public SchedulePopulation(int populationSize)
-    {
-        schedules = new Schedule[populationSize];
+    private final List<Schedule> schedules;
 
-        // Initialize population
-//        if (initialise)
-//        {
-            // Loop and create schedules
-//            for (int i = 0; i < size(); i++)
-//            {
-//                Schedule newIndividual = new Schedule(i);
-//                newIndividual.generateZeroSchedule();
-//                saveIndividual(i, newIndividual);
-//            }
-//        }
-
+    public SchedulePopulation(List<Schedule> schedules) {
+        this.schedules = schedules;
     }
 
-    public SchedulePopulation(SchedulePopulation schedulePopulation)
-    {
-
+    public SchedulePopulation(List<Process> processes, Integer populationSize) {
+        schedules = IntStream.rangeClosed(1, populationSize)
+                .boxed()
+                .map(integer -> new Schedule(processes))
+                .collect(toList());
     }
 
-    /* Getters */
-    public Schedule getIndividual(int index)
-    {
-        return schedules[index];
+    public SchedulePopulation(SchedulePopulation schedulePopulation) {
+        List<Schedule> schedules;
+        schedules = crossSchedules(schedulePopulation);
+        this.schedules = schedules
+                .stream()
+                .map(this::mutate)
+                .collect(toList());
     }
 
-    public Schedule getFittest(int maxWeight)
-    {
-        Schedule fittest = schedules[0];
-        // Loop through schedules to find fittest
-        for (int i = 0; i < size(); i++)
-        {
-            Schedule tmp = getIndividual(i);
-            if (fittest.getFitness(fittest.id) < tmp.getFitness(tmp.id))
-            {
-                fittest = getIndividual(i);
-            }
+    private List<Schedule> crossSchedules(SchedulePopulation schedulePopulation) {
+        List<Schedule> schedules = new ArrayList<>();
+        if (schedulePopulation.schedules.size() <= 1) {
+            return schedulePopulation.schedules;
         }
-        return fittest;
+        for (int i = 0; i < schedulePopulation.schedules.size() - 1; i++) {
+            Schedule schedule = schedulePopulation.schedules.get(i);
+            Schedule nextSchedule = schedulePopulation.schedules.get(i + 1);
+            List<Process> crossover = crossover(schedule, nextSchedule);
+            Schedule crossed = new Schedule(crossover);
+            schedules.add(crossed);
+        }
+        return schedules;
     }
 
-    public Schedule getWorst(int maxWeight)
-    {
+    public Schedule getWorst(FitnessCalculator fitnessCalculator) {
         int j = 0;
-        Schedule worst = getFittest(maxWeight);
 
-        // Loop through schedules to find fittest
-        for (int i = 0; i < size(); i++)
-        {
-            Schedule tmp = getIndividual(i);
-            if (worst.getFitness(worst.id) > tmp.getFitness(tmp.id) && tmp.getFitness(tmp.id) > 0)
-            {
-                worst = getIndividual(i);
-            }
-        }
-        return worst;
-    }
-
-    /* Public methods */
-    // Get population size
-    public int size()
-    {
-        return schedules.length;
-    }
-
-    // Save individual
-    public void saveIndividual(int index, Schedule schedule)
-    {
-        schedules[index] = schedule;
+        return schedules.stream()
+                .sorted(comparing(fitnessCalculator::getFitness).reversed())
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
-    public void generatePopulation()
-    {
+    public void generatePopulation() {
 
     }
 
     @Override
-    public void mutate()
-    {
+    public Schedule mutate(Schedule schedule) {
+        List<Process> processes = schedule
+                .getSchedule()
+                .stream()
+                .map(process -> new Process(process.getMachine(), process.getDetail(), process.getOperationTime(), mutateProcessStartTime(process)))
+                .collect(toList());
+        return new Schedule(schedule.getDetails(), schedule.getMachines(), processes);
+    }
 
+    private int mutateProcessStartTime(Process process) {
+        int result = process.getStartTime() + (int) (Math.random() * 4) - 2;
+        return result > 0 ? result : process.getStartTime();
     }
 
     @Override
-    public void crossover(Schedule schedule1, Schedule schedule2)
-    {
+    public List<Process> crossover(Schedule schedule1, Schedule schedule2) {
+        List<Process> processes1 = schedule1.getSchedule();
+        List<Process> processes2 = schedule2.getSchedule();
+        return IntStream.range(0, processes1.size())
+                .boxed()
+                .map(integer -> crossoverProcess(processes1, processes2, integer))
+                .collect(toList());
+    }
 
+    private Process crossoverProcess(List<Process> processes1, List<Process> processes2, Integer integer) {
+
+        Process process = processes1.get(integer);
+        Process process1 = processes2.get(integer);
+        int startTime = integer % 2 == 0 ? process.getStartTime() : process1.getStartTime();
+        return new Process(process.getMachine(), process.getDetail(), process.getOperationTime(), startTime);
     }
 
     @Override
-    public List<Schedule> selectFittest(FitnessCalculator calculator)
-    {
-        return null;
+    public Schedule selectFittest(FitnessCalculator fitnessCalculator) {
+        return schedules.stream()
+                .sorted(comparing(fitnessCalculator::getFitness))
+                .findFirst()
+                .orElse(null);
     }
+
+    @Deprecated
+    public SchedulePopulation(int i) {
+        this.schedules = null;
+    }
+
+
 }

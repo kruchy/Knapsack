@@ -20,14 +20,14 @@ public class Algorithm {
      * @param pop population
      * @return new population
      */
-    public static SchedulePopulation evolvePopulation(SchedulePopulation pop, int maxWeight) {
-        SchedulePopulation newSchedulePopulation = new SchedulePopulation(pop.size());
+    public static SchedulePopulation evolvePopulation(SchedulePopulation pop) {
+        SchedulePopulation newSchedulePopulation = new SchedulePopulation(2);
 
 
 
         // Best individual
         if (elitism) {
-            newSchedulePopulation.saveIndividual(0, pop.getFittest(maxWeight));
+//            newSchedulePopulation.saveIndividual(0, pop.selectFittest(new FitnessCalculator()));
         }
 
         // Crossover population
@@ -39,19 +39,19 @@ public class Algorithm {
         }
         // Loop over the population size and create new schedules with
         // crossover
-        for (int i = elitismOffset; i < pop.size(); i++) {
+//        for (int i = elitismOffset; i < pop.size(); i++) {
 
 //            Individual indiv1 = tournamentSelection(pop, maxWeight);
 //            Individual indiv2 = tournamentSelection(pop, maxWeight);
 //            Individual newIndiv = crossover(indiv1, indiv2);
 //
 //            newPopulationImpl.saveIndividual(i, newIndiv);
-        }
+//        }
 
         // Mutate population
-        for (int i = 0; i < newSchedulePopulation.size(); i++) {
-            mutate(newSchedulePopulation.getIndividual(i));
-        }
+//        for (int i = 0; i < newSchedulePopulation.size(); i++) {
+//            mutate(newSchedulePopulation.getIndividual(i));
+//        }
 
         return newSchedulePopulation;
     }
@@ -85,16 +85,16 @@ public class Algorithm {
     }
 
     // Select schedules for crossover
-    private static Schedule tournamentSelection(SchedulePopulation pop, int maxWeight) {
+    private static Schedule tournamentSelection(SchedulePopulation pop) {
         // Create a tournament population
-        SchedulePopulation tournament = new SchedulePopulation(tournamentSize);
+        SchedulePopulation tournament = new SchedulePopulation(1);
         // For each place in the tournament get a random individual
         for (int i = 0; i < tournamentSize; i++) {
-            int randomId = (int) (Math.random() * pop.size());
-            tournament.saveIndividual(i, pop.getIndividual(randomId));
+//            int randomId = (int) (Math.random() * pop.size());
+//            tournament.saveIndividual(i, pop.getIndividual(randomId));
         }
         // Get the fittest
-        Schedule fittest = tournament.getFittest(maxWeight);
+        Schedule fittest = tournament.selectFittest(new FitnessCalculator());
         return fittest;
     }
 }

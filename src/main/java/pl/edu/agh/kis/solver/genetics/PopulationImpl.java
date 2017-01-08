@@ -1,6 +1,7 @@
 package pl.edu.agh.kis.solver.genetics;
 
 
+import pl.edu.agh.kis.solver.genetics.model.Process;
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
 import java.util.List;
@@ -78,17 +79,18 @@ public class PopulationImpl implements Population {
     }
 
     @Override
-    public void mutate() {
-
+    public Schedule mutate(Schedule schedule) {
+        return null;
     }
 
     @Override
-    public void crossover(Schedule schedule1, Schedule schedule2) {
+    public List<Process> crossover(Schedule schedule1, Schedule schedule2) {
 
+        return null;
     }
 
     @Override
-    public List<Schedule> selectFittest(FitnessCalculator calculator) {
+    public Schedule selectFittest(FitnessCalculator calculator) {
         return null;
     }
 }

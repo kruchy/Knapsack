@@ -8,8 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 public class Schedule {
 
@@ -108,6 +107,25 @@ public class Schedule {
         return details;
     }
 
+    @Override
+    public String toString() {
+        return details.stream()
+                .map(detail -> getJobsForDetail(detail.getId()))
+                .map(processes1 -> processes1.stream().findFirst().orElse(null).getDetail().getId() + " " +
+                        processes1.stream().map(process -> process.getStartTime() + ":" + process.getOperationTime())
+                                .collect(joining(" "))
+                )
+                .collect(joining(System.lineSeparator()));
+    }
+
+    private String processListToString(Map.Entry<Detail, List<Process>> detailListEntry) {
+        return detailListEntry
+                .getValue()
+                .stream()
+                .map(process -> process.getStartTime() + ":" + process.getOperationTime())
+                .collect(joining(" "));
+    }
+
     public List<Process> getJobsForDetail(Integer id) {
 
         return processes
@@ -130,14 +148,23 @@ public class Schedule {
 
 
     public boolean isOverlapping() {
+        return detailsAreOverlapping() || machinesAreOverlapping();
+    }
+
+    private boolean machinesAreOverlapping() {
+        boolean isOverlapping = false;
+        for (Map.Entry<Machine, List<Process>> machineListEntry : getMachineSchedule().entrySet()) {
+            List<Process> processes = machineListEntry.getValue().stream().sorted(Comparator.comparing(o -> o.getDetail().getId())).collect(toList());
+            isOverlapping = isAnyProcessOverlapping(processes);
+        }
+        return isOverlapping;
+    }
+
+    private boolean detailsAreOverlapping() {
         boolean isOverlapping = false;
         for (Detail detail : getDetails()) {
-            List<Process> jobsForDetail = getJobsForDetail(detail.getId());
+            List<Process> jobsForDetail = getJobsForDetail(detail.getId()).stream().sorted(Comparator.comparing(o -> o.getMachine().getId())).collect(toList());
             isOverlapping = isAnyProcessOverlapping(jobsForDetail);
-        }
-        for (Map.Entry<Machine, List<Process>> machineListEntry : getMachineSchedule().entrySet()) {
-            List<Process> processes = machineListEntry.getValue();
-            isOverlapping = isAnyProcessOverlapping(processes);
         }
         return isOverlapping;
     }
