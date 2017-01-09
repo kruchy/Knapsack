@@ -10,33 +10,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Optional.of;
+
 public class FitnessCalculator {
 
+    public static final int OVERLAPPING_PENALTY = 300;
+    public static final int NO_PENALTY = 0;
     static List<Schedule> solution = new ArrayList<>();
     private static int WORST_FITNESS = 9999;
-
-
-    public void setSolution(List<Schedule> newSolution) {
-        solution = newSolution;
-    }
-
-
-    public void setSolution(String newSolution) {
-
-    }
 
     public int getFitness(Schedule schedule) {
 
         int fitness = 0;
 
-        if (schedule.isOverlapping()) {
-            return WORST_FITNESS;
-        }
-
+        fitness += getPenaltyForOverlapping(schedule);
         fitness += getDelaysForDetails(schedule);
         fitness += getDelaysForMachines(schedule);
         fitness += getPenaltiesForDetails(schedule);
         return fitness;
+    }
+
+    private int getPenaltyForOverlapping(Schedule schedule) {
+        return of(schedule)
+                .filter(Schedule::isOverlapping)
+                .map(schedule1 -> OVERLAPPING_PENALTY)
+                .orElse(NO_PENALTY);
     }
 
     public int getPenaltiesForDetails(Schedule schedule) {

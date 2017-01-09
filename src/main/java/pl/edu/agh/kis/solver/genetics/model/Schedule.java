@@ -18,7 +18,6 @@ public class Schedule {
     public static int[] weights;
     private float fitness = 0;
     public Integer id;
-    private Map<Machine, List<Process>> machinesProcesses;
     private List<Detail> details;
     private List<Machine> machines;
     private List<Process> processes;
@@ -30,7 +29,6 @@ public class Schedule {
                 .sorted(comparing(p -> ((Process) p).getMachine().getId())
                         .thenComparing(comparing(o -> ((Process) o).getStartTime())))
                 .collect(Collectors.toList());
-        generateZeroSchedule(processes);
     }
 
     public Schedule() {
@@ -64,14 +62,6 @@ public class Schedule {
         return this.processes;
     }
 
-    public void generateSchedule() {
-
-    }
-
-    public void generateZeroSchedule(List<Process> processes) {
-        machinesProcesses = processes.stream().collect(groupingBy(Process::getMachine));
-    }
-
     public static void setDefaultDetailNumber(int length) {
         defaultDetailNumber = length;
         values = new int[defaultDetailNumber];
@@ -86,44 +76,12 @@ public class Schedule {
         return fitness;
     }
 
-    public static Schedule randomSchedule() {
-        return new Schedule();
-    }
-
-    public Machine getMachine(int id) {
-        return machinesProcesses
-                .keySet()
-                .stream()
-                .filter(machine -> machine.getId() == id)
-                .findFirst()
-                .orElse(null);
-    }
-
     public List<Machine> getMachines() {
         return machines;
     }
 
     public List<Detail> getDetails() {
         return details;
-    }
-
-    @Override
-    public String toString() {
-        return details.stream()
-                .map(detail -> getJobsForDetail(detail.getId()))
-                .map(processes1 -> processes1.stream().findFirst().orElse(null).getDetail().getId() + " " +
-                        processes1.stream().map(process -> process.getStartTime() + ":" + process.getOperationTime())
-                                .collect(joining(" "))
-                )
-                .collect(joining(System.lineSeparator()));
-    }
-
-    private String processListToString(Map.Entry<Detail, List<Process>> detailListEntry) {
-        return detailListEntry
-                .getValue()
-                .stream()
-                .map(process -> process.getStartTime() + ":" + process.getOperationTime())
-                .collect(joining(" "));
     }
 
     public List<Process> getJobsForDetail(Integer id) {
@@ -146,10 +104,10 @@ public class Schedule {
                 .collect(groupingBy(Process::getMachine));
     }
 
-
     public boolean isOverlapping() {
         return detailsAreOverlapping() || machinesAreOverlapping();
     }
+
 
     private boolean machinesAreOverlapping() {
         boolean isOverlapping = false;
@@ -179,5 +137,16 @@ public class Schedule {
             }
         }
         return isOverlapping;
+    }
+
+    @Override
+    public String toString() {
+        return details.stream()
+                .map(detail -> getJobsForDetail(detail.getId()))
+                .map(processes1 -> processes1.stream().findFirst().orElse(null).getDetail().getId() + " " +
+                        processes1.stream().map(process -> process.getStartTime() + ":" + process.getOperationTime())
+                                .collect(joining(" "))
+                )
+                .collect(joining(System.lineSeparator()));
     }
 }
