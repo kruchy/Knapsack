@@ -23,11 +23,11 @@ public class FitnessCalculator {
 
         int fitness = 0;
 
-        fitness += getPenaltyForOverlapping(schedule);
-        fitness += getDelaysForDetails(schedule);
-        fitness += getDelaysForMachines(schedule);
-        fitness += getPenaltiesForDetails(schedule);
-        return fitness;
+//        fitness += getPenaltyForOverlapping(schedule);
+//        fitness += getDelaysForDetails(schedule);
+//        fitness += getDelaysForMachines(schedule);
+//        fitness += getPenaltiesForDetails(schedule);
+        return schedule.getSchedule().stream().map(Process::getOperationTime).reduce((integer, integer2) -> integer + integer2).orElse(99999);
     }
 
     private int getPenaltyForOverlapping(Schedule schedule) {
@@ -93,5 +93,6 @@ public class FitnessCalculator {
         Integer delay = process.getStartTime() + process.getOperationTime() - process.getDetail().getMaxFinishTime();
         return delay < 0 ? 0 : delay;
     }
+
 
 }

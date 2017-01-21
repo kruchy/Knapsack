@@ -41,19 +41,22 @@ public class SimpleMain {
         List<Schedule> schedules = IntStream.rangeClosed(1, 10).boxed().map(integer -> new Schedule(loadedDetails, loadedMachines, loadedProcesses)).collect(Collectors.toList());
         SchedulePopulation population = new SchedulePopulation(schedules);
 //        int i = scanner.nextInt();
-        int i = 100;
+        int i = 15;
         FitnessCalculator fitnessCalculator = new FitnessCalculator();
         Schedule fittest = population.selectFittest(fitnessCalculator);
-        for (int a = 0; /*a < i && */ fittest.isOverlapping(); a++) {
+        for (int a = 0; a < i /*&&  fittest.isOverlapping()*/; a++) {
             population = new SchedulePopulation(population);
             fittest = population.selectFittest(fitnessCalculator);
             int fitness = fitnessCalculator.getFitness(fittest);
-//            System.out.println("ITERATING " + fitness);
+            System.out.println(fittest.toString());
+            System.out.println("-------------------------");
+            //            System.out.println("ITERATING " + fitness);
 //            System.out.println(fittest);
 //            System.out.println("DONE ITERATING" );
         }
 
         System.out.println(fittest.toString());
+
 
     }
 

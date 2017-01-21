@@ -10,7 +10,7 @@ public interface Population {
 
     void generatePopulation();
 
-    Schedule mutate(Schedule schedule);
+    Schedule mutate(Schedule schedule, int first, int second);
 
     List<Process> crossover(Schedule schedule1, Schedule schedule2);
 

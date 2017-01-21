@@ -1,5 +1,6 @@
 package pl.edu.agh.kis.solver.genetics;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -19,6 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class FitnessCalculatorTest {
     public static final List<String> PROCESSES = Arrays.asList("0,1 1,2 4,3", "1,2 3,3 8,1", "5,2 7,4 11,1");
     FitnessCalculator fitnessCalculator = new FitnessCalculator();
@@ -69,6 +71,7 @@ public class FitnessCalculatorTest {
     }
 
     @Test
+    @Ignore
     public void shouldCalculateFitness() throws Exception {
         List<Process> loadedProcesses = new ProcessLoader().loadWithStartTime(PROCESSES);
         Schedule schedule = new Schedule(loadedProcesses);

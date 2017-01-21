@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import pl.edu.agh.kis.solver.NotValidInput;
+import pl.edu.agh.kis.solver.file.FileParser;
 import pl.edu.agh.kis.solver.loader.ProcessLoader;
 
 import java.util.*;
@@ -66,7 +68,6 @@ public class ScheduleTest {
         Schedule schedule = new Schedule(processes);
 
         assertThat(schedule.isOverlapping(), is(true));
-
     }
 
     private Matcher<List<Process>> sorted(final Comparator<Process> comparing) {
@@ -86,6 +87,15 @@ public class ScheduleTest {
             }
         };
     }
+
+    @Test
+    public void shouldNotChangeProcessSize() throws Exception, NotValidInput {
+        List<Process> processes = new ProcessLoader().loadFromInput(new FileParser().loadFromResources("testProcesses"));
+        Schedule schedule = new Schedule(processes);
+
+        assertThat(schedule.getSchedule(), hasSize(processes.size()));
+    }
+
 
     private List<Process> getProcesses() {
         return IntStream.rangeClosed(1, 3)

@@ -2,10 +2,11 @@ package pl.edu.agh.kis.solver.genetics.model;
 
 import pl.edu.agh.kis.solver.genetics.FitnessCalculator;
 
-import java.util.Comparator;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
@@ -28,7 +29,7 @@ public class Schedule {
         this.processes = processes.stream()
                 .sorted(comparing(p -> ((Process) p).getMachine().getId())
                         .thenComparing(comparing(o -> ((Process) o).getStartTime())))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     public Schedule() {
@@ -39,22 +40,54 @@ public class Schedule {
     }
 
     public Schedule(List<Process> loadedProcesses) {
-        this.processes = loadedProcesses.stream()
-                .sorted(comparing(p -> ((Process) p).getMachine().getId())
-                        .thenComparing(comparing(o -> ((Process) o).getStartTime())))
-                .collect(Collectors.toList());
+        List<Process> processes = loadedProcesses.stream()
+                .sorted(/*
+                        comparing(p -> ((Process) p).getMachine().getId())
+                        .thenComparing(*/
+                        comparing(Process::getStartTime))
+                /*)*/
+                .collect(toList());
+
         this.machines = loadedProcesses
                 .stream()
                 .map(Process::getMachine)
                 .distinct()
-                .sorted(Comparator.comparing(Machine::getId))
-                .collect(Collectors.toList());
+                .sorted(comparing(Machine::getId))
+                .collect(toList());
         this.details = loadedProcesses
                 .stream()
                 .map(Process::getDetail)
                 .distinct()
-                .sorted(Comparator.comparing(Detail::getId))
-                .collect(Collectors.toList());
+                .sorted(comparing(Detail::getId))
+                .collect(toList());
+
+        this.processes = updateStartTimes(loadedProcesses);
+    }
+
+    private List<Process> updateStartTimes(List<Process> loadedProcesses) {
+        return details.stream().map(Detail::getId)
+                .map(integer -> loadedProcesses.stream().filter(process -> process.getDetail().getId().equals(integer)).collect(toList()))
+                .map(this::calculateStartTimes)
+                .flatMap(Collection::stream)
+                .collect(toList());
+    }
+
+    private List<Process> calculateStartTimes(List<Process> processes1) {
+        return Stream.of(Collections.singletonList(processes1.get(0)), processes1.subList(1, processes1.size())
+                .stream()
+                .map(process -> createProcessWithCumulativeStartTime(processes1, process))
+                .collect(toList()))
+                .flatMap(Collection::stream)
+                .collect(toList());
+    }
+
+    private Process createProcessWithCumulativeStartTime(List<Process> processes1, Process process) {
+        return new Process(process.getMachine(), process.getDetail(), process.getOperationTime(), cumulativeStartTime(processes1, process));
+    }
+
+    private int cumulativeStartTime(List<Process> processes1, Process process) {
+        int indexOf = processes1.indexOf(process);
+        return indexOf > 0 ? processes1.get(indexOf - 1).getStartTime() + processes1.get(indexOf - 1).getOperationTime() : 0;
     }
 
 
@@ -62,14 +95,8 @@ public class Schedule {
         return this.processes;
     }
 
-    public static void setDefaultDetailNumber(int length) {
-        defaultDetailNumber = length;
-        values = new int[defaultDetailNumber];
-        weights = new int[defaultDetailNumber];
-    }
 
-
-    public float getFitness(int id) {
+    public float getFitness() {
         if (fitness == 0) {
             fitness = new FitnessCalculator().getFitness(this);
         }
@@ -112,7 +139,7 @@ public class Schedule {
     private boolean machinesAreOverlapping() {
         boolean isOverlapping = false;
         for (Map.Entry<Machine, List<Process>> machineListEntry : getMachineSchedule().entrySet()) {
-            List<Process> processes = machineListEntry.getValue().stream().sorted(Comparator.comparing(o -> o.getDetail().getId())).collect(toList());
+            List<Process> processes = machineListEntry.getValue().stream().sorted(comparing(o -> o.getDetail().getId())).collect(toList());
             isOverlapping = isAnyProcessOverlapping(processes);
         }
         return isOverlapping;
@@ -121,7 +148,7 @@ public class Schedule {
     private boolean detailsAreOverlapping() {
         boolean isOverlapping = false;
         for (Detail detail : getDetails()) {
-            List<Process> jobsForDetail = getJobsForDetail(detail.getId()).stream().sorted(Comparator.comparing(o -> o.getMachine().getId())).collect(toList());
+            List<Process> jobsForDetail = getJobsForDetail(detail.getId()).stream().sorted(comparing(o -> o.getMachine().getId())).collect(toList());
             isOverlapping = isAnyProcessOverlapping(jobsForDetail);
         }
         return isOverlapping;
@@ -143,10 +170,8 @@ public class Schedule {
     public String toString() {
         return details.stream()
                 .map(detail -> getJobsForDetail(detail.getId()))
-                .map(processes1 -> processes1.stream().findFirst().orElse(null).getDetail().getId() + " " +
-                        processes1.stream().map(process -> process.getStartTime() + ":" + process.getOperationTime())
-                                .collect(joining(" "))
-                )
+                .map(processes1 -> processes1.get(0).getDetail().getId() + " " + processes1.stream().map(Process::toString).collect(joining("   ")))
                 .collect(joining(System.lineSeparator()));
+//    return  processes.stream().map(process -> "Detail" + process.getDetail().getId()+" Machine"+ process.getMachine().getId() + "-- "+process.getStartTime()+":"+process.getOperationTime()).collect(joining(" "));
     }
 }

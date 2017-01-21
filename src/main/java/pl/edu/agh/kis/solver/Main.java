@@ -345,11 +345,11 @@ public class Main extends JFrame {
             breakpoint1 = breakpoint2;
             fittest = pop.selectFittest(new FitnessCalculator());
             worst = pop.getWorst(new FitnessCalculator());
-            breakpoint2 = fittest.getFitness(fittest.id);
+            breakpoint2 = fittest.getFitness();
             generationCount++;
-            minFi.add(generationCount, worst.getFitness(worst.id));
-            maxFi.add(generationCount, fittest.getFitness(fittest.id));
-            avgFi.add(generationCount, (worst.getFitness(worst.id) + fittest.getFitness(fittest.id)) / 2);
+            minFi.add(generationCount, worst.getFitness());
+            maxFi.add(generationCount, fittest.getFitness());
+            avgFi.add(generationCount, (worst.getFitness() + fittest.getFitness()) / 2);
             pop = Algorithm.evolvePopulation(pop);
             condition = (rdbtnNumberOfIterations.isSelected() ? generationCount <= iter : Math.abs(breakpoint2 - breakpoint1) > tolerance);
         } while (condition);
@@ -381,7 +381,6 @@ public class Main extends JFrame {
         knap.maxWeight = knapSize.getValue();
 //        FitnessCalculator.setMaxWeight(knap.maxWeight);
         tolerance = 0.05;
-        Schedule.setDefaultDetailNumber(knap.values.length);
         Schedule.values = knap.values;
         Schedule.weights = knap.weights;
 
