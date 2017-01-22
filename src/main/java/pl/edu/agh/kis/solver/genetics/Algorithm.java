@@ -1,7 +1,5 @@
 package pl.edu.agh.kis.solver.genetics;
 
-import pl.edu.agh.kis.solver.genetics.model.Schedule;
-
 /**
  * @author Kruchy
  */
@@ -56,45 +54,4 @@ public class Algorithm {
         return newSchedulePopulation;
     }
 
-    // Crossover schedules
-    private static Individual crossover(Individual indiv1, Individual indiv2) {
-        Individual newSol = new Individual();
-        // Loop through genes
-        for (int i = 0; i < indiv1.size(); i++) {
-            // Crossover
-            if (Math.random() <= uniformRate) {
-                newSol.setGene(i, indiv1.getGene(i));
-            } else {
-                newSol.setGene(i, indiv2.getGene(i));
-            }
-        }
-        return newSol;
-    }
-
-    // Mutate an individual
-    private static void mutate(Schedule indiv) {
-        // Loop through genes
-//        for (int i = 0; i < indiv.size(); i++) {
-//            if (Math.random() <= mutationRate) {
-//                 Create random gene
-//                byte gene = (byte) Math.round(Math.random());
-//                indiv.setGene(i, gene);
-//
-//            }
-//        }
-    }
-
-    // Select schedules for crossover
-    private static Schedule tournamentSelection(SchedulePopulation pop) {
-        // Create a tournament population
-        SchedulePopulation tournament = new SchedulePopulation(1);
-        // For each place in the tournament get a random individual
-        for (int i = 0; i < tournamentSize; i++) {
-//            int randomId = (int) (Math.random() * pop.size());
-//            tournament.saveIndividual(i, pop.getIndividual(randomId));
-        }
-        // Get the fittest
-        Schedule fittest = tournament.selectFittest(new FitnessCalculator());
-        return fittest;
-    }
 }

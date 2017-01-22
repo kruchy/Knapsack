@@ -12,14 +12,20 @@ import static java.util.stream.Collectors.toList;
 public class DetailHolder {
 
 
+    private final Detail detail;
+
     public List<Process> getProcesses() {
         return processes;
+    }
+
+    public Detail getDetail() {
+        return this.detail;
     }
 
     private final List<Process> processes;
 
     public DetailHolder(Integer id, String[] processingTimes) {
-        Detail detail = new Detail(id);
+        detail = new Detail(id);
 
         List<String> temp = Arrays.asList(processingTimes);
         processes = temp

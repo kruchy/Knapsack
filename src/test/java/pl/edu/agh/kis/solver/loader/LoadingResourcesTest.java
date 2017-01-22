@@ -4,13 +4,14 @@ import org.junit.Test;
 import pl.edu.agh.kis.solver.NotValidInput;
 import pl.edu.agh.kis.solver.file.FileParser;
 import pl.edu.agh.kis.solver.genetics.model.Detail;
+import pl.edu.agh.kis.solver.genetics.model.DetailProcessQueue;
 import pl.edu.agh.kis.solver.genetics.model.Machine;
-import pl.edu.agh.kis.solver.genetics.model.Process;
 
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.List;
 
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -20,7 +21,7 @@ public class LoadingResourcesTest {
 
 
     private DetailLoader detailLoader = new DetailLoader();
-    private ProcessLoader processLoader = new ProcessLoader();
+    private DetailProcessLoader detailProcessLoader = new DetailProcessLoader();
     private MachineLoader machineLoader = new MachineLoader();
 
     @Test
@@ -48,9 +49,9 @@ public class LoadingResourcesTest {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         String path = Paths.get(classloader.getResource("processes").toURI()).toString();
         List<String> processes = new FileParser().getFileLines(path);
-        List<Process> loadedProcesses = processLoader.loadFromInput(processes);
+        List<DetailProcessQueue> loadedProcesses = detailProcessLoader.loadFromInput(processes);
 
-        assertThat(loadedProcesses, hasSize(9));
-        assertThat(loadedProcesses.stream().collect(groupingBy(Process::getDetail)).size(), is(equalTo(3)));
+        assertThat(loadedProcesses, hasSize(3));
+        assertThat(loadedProcesses.stream().map(DetailProcessQueue::getProcesses).flatMap(Collection::stream).distinct().collect(toList()).size(), is(equalTo(9)));
     }
 }

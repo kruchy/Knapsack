@@ -1,14 +1,9 @@
 package pl.edu.agh.kis.solver.genetics;
 
-import pl.edu.agh.kis.solver.genetics.model.Detail;
-import pl.edu.agh.kis.solver.genetics.model.Machine;
+import pl.edu.agh.kis.solver.genetics.model.*;
 import pl.edu.agh.kis.solver.genetics.model.Process;
-import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Optional.of;
 
@@ -27,7 +22,14 @@ public class FitnessCalculator {
 //        fitness += getDelaysForDetails(schedule);
 //        fitness += getDelaysForMachines(schedule);
 //        fitness += getPenaltiesForDetails(schedule);
-        return schedule.getSchedule().stream().map(Process::getOperationTime).reduce((integer, integer2) -> integer + integer2).orElse(99999);
+        return schedule
+                .getSchedule()
+                .stream()
+                .map(DetailProcessQueue::getProcesses)
+                .flatMap(Collection::stream)
+                .map(Process::getOperationTime)
+                .reduce((integer, integer2) -> integer + integer2)
+                .orElse(99999);
     }
 
     private int getPenaltyForOverlapping(Schedule schedule) {
