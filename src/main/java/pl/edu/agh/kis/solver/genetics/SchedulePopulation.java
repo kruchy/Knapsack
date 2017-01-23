@@ -2,13 +2,9 @@ package pl.edu.agh.kis.solver.genetics;
 
 import pl.edu.agh.kis.solver.genetics.model.DetailProcessQueue;
 import pl.edu.agh.kis.solver.genetics.model.Genotype;
-import pl.edu.agh.kis.solver.genetics.model.Process;
 import pl.edu.agh.kis.solver.genetics.model.Schedule;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.util.Comparator.comparing;
@@ -36,14 +32,28 @@ public class SchedulePopulation implements Population {
     public SchedulePopulation(SchedulePopulation schedulePopulation) {
         List<Schedule> schedules;
         schedules = crossSchedules(schedulePopulation);
-        this.schedules = schedules
+        FitnessCalculator fitnessCalculator = new FitnessCalculator();
+
+        List<Schedule> mutated = schedules
                 .stream()
                 .map((schedule) -> {
                     int first = new Random().ints(0, schedule.getSchedule().size()).findFirst().getAsInt();
                     int second = new Random().ints(0, schedule.getSchedule().size()).findFirst().getAsInt();
                     return mutate(schedule, first, second);
-                })
+                }).sorted(Comparator.comparing(fitnessCalculator::getFitness))
                 .collect(toList());
+
+        List<Schedule> result = new ArrayList<>();
+        for (int i = 0; i < mutated.size() / 2; i++) {
+            result.add(mutated.get(i));
+        }
+        for (int i = 0; i < mutated.size() / 2; i++) {
+            result.add(mutated.get(i));
+        }
+        if (result.size() == mutated.size() - 1) {
+            result.add(mutated.get(0));
+        }
+        this.schedules = result;
     }
 
     public List<Schedule> crossSchedules(SchedulePopulation schedulePopulation) {
@@ -94,62 +104,12 @@ public class SchedulePopulation implements Population {
 
     @Override
     public Schedule mutate(Schedule schedule, int first, int second) {
-        int temp1 = first, temp2 = second;
-        if (first > second) {
-            temp1 = second;
-            temp2 = first;
-        }
-        if (first == second) {
-            temp1 = schedule.getSchedule().size() / 2;
-            temp2 = temp1 + 1;
-        }
-//        List<Process> collect1 = schedule.getSchedule().stream().collect(toList());
         int[] genotype = schedule.getGenotype().genes;
         int i = genotype[first];
         genotype[first] = genotype[second];
         genotype[second] = i;
 
-
-//        Process process = schedule.getSchedule().get(temp1);
-//        Process process1 = schedule.getSchedule().get(temp2);
-//        List<Process> processes1 = schedule.getSchedule().subList(0, temp1);
-//        List<Process> processes2 = schedule.getSchedule().subList(temp1 + 1, temp2);
-//        processes1.add(process1);
-//        List<Process> processes3 = schedule.getSchedule().subList(temp2 + 1, schedule.getSchedule().size());
-//        processes2.add(process);
-//        processes1.addAll(processes2);
-//        List<Process> collect = Stream.of(processes1, singletonList(process1), processes2, singletonList(process), processes3).flatMap(Collection::stream).collect(toList());
         return new Schedule(schedule.getSchedule(), new Genotype(genotype));
-//        List<Process> processes = schedule
-//                .getSchedule()
-//                .stream()
-//                .map(process -> new Process(process.getMachine(), process.getDetail(), process.getOperationTime(), mutateProcessStartTime(process)))
-//                .collect(toList());
-//        return new Schedule(schedule.getDetails(), schedule.getMachines(), processes);
-    }
-
-    private int mutateProcessStartTime(Process process) {
-        int result = process.getStartTime() + (int) (Math.random() * 4) - 2;
-        return result > 0 ? result : process.getStartTime();
-    }
-
-    @Override
-    public List<Process> crossover(Schedule schedule1, Schedule schedule2) {
-//        List<Process> processes1 = schedule1.getSchedule();
-//        List<Process> processes2 = schedule2.getSchedule();
-//        return IntStream.range(0, processes1.size())
-//                .boxed()
-//                .map(integer -> crossoverProcess(processes1, processes2, integer))
-//                .collect(toList());
-        return null;
-    }
-
-    private Process crossoverProcess(List<Process> processes1, List<Process> processes2, Integer integer) {
-
-        Process process = processes1.get(integer);
-        Process process1 = processes2.get(integer);
-        int startTime = integer % 2 == 0 ? process.getStartTime() : process1.getStartTime();
-        return new Process(process.getMachine(), process.getDetail(), process.getOperationTime(), startTime);
     }
 
     @Override

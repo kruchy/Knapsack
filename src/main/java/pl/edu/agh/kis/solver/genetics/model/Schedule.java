@@ -171,13 +171,12 @@ public class Schedule {
         List<DetailProcessQueue> collect = processQueues.stream().map(processQueue -> new DetailProcessQueue(processQueue.getDetail(), processQueue.getProcesses().stream().collect(toList()))).collect(toList());
         ArrayList<StringBuilder> lines = new ArrayList<>();
         for (DetailProcessQueue detailProcessQueue : collect) {
-            lines.add(new StringBuilder(detailProcessQueue.getDetail().getId() + " "));
+            lines.add(new StringBuilder(detailProcessQueue.getDetail().getDescription() + " "));
         }
         for (int i : genotype.genes) {
             Process process = collect.get(i).getNext();
             lines
-                    .get(i)
-                    .append("|" + process.getMachine().getId()).append(IntStream.rangeClosed(0, process.getOperationTime()).boxed()
+                    .get(i).append("|").append(process.getMachine().getId()).append(IntStream.rangeClosed(0, process.getOperationTime()).boxed()
                     .map(integer -> "-")
                     .collect(joining()))
                     .append("|  ");
@@ -188,7 +187,9 @@ public class Schedule {
             }
         }
 
-        return machines.stream().map(machine -> machine.getId() + ":" + machine.getDescription()).collect(joining("  ")) + System.lineSeparator() + lines.stream().collect(joining(System.lineSeparator()));
+        return /*machines.stream().map(machine -> machine.getId() + ":" + machine.getDescription()).collect(joining("  ")) +
+                System.lineSeparator() + */
+                lines.stream().collect(joining(System.lineSeparator()));
 //    return  processes.stream().map(process -> "Detail" + process.getDetail().getId()+" Machine"+ process.getMachine().getId() + "-- "+process.getStartTime()+":"+process.getOperationTime()).collect(joining(" "));
     }
 }
